@@ -362,5 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+#Db
+Db/
+
 # DbPassword
 Pages/Password.cs
