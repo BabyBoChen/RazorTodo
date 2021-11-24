@@ -1,0 +1,22 @@
+﻿#pageTitle {
+    width: 100%;
+    text-align: center;
+}
+
+#txtPassword {
+    width: 100%;
+}
+
+#btnWrapper {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#errorMsg {
+    width: 100%;
+    color: red;
+    font-size: large;
+    text-align: center;
+}

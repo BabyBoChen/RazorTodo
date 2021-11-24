@@ -1,0 +1,27 @@
+﻿:root {
+    --mdc-theme-primary: #f361af;
+    --mdc-theme-secondary: #f361af;
+}
+
+body {
+    background-color: #fdf6fa;
+    color:#3f3038 !important;
+}
+
+.mdc-button__label {
+    color: #fdf6fa;
+}
+
+.mdc-button--outlined .mdc-button__label {
+    color: #f361af;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: #f361af !important;
+}
+
+.mdc-dialog__button {
+    background-color: #DB429B;
+}
+
+
