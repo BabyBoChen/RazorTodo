@@ -9,9 +9,6 @@
     <Content Include="Db/*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="startup.sh">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />  
   </ItemGroup>
 
