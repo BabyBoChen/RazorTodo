@@ -31,7 +31,7 @@ namespace RazorTodo.Pages
         {
             string password = Request.Form["Password"];
             string returnUrl = Request.Form["ReturnUrl"];
-            if (password == DbPassword.Password)
+            if (password == Password.Password)
             {
                 var claims = new List<Claim>
                 {

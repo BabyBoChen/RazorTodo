@@ -9,12 +9,14 @@
     <Content Include="Db/*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Remove="Db\Password.cs" />
-    <Content Include="Pages\Password.cs" />
     <Content Include="startup.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />  
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Db\" />
   </ItemGroup>
 
 </Project>

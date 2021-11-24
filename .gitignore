@@ -366,4 +366,4 @@ FodyWeavers.xsd
 Db/
 
 # DbPassword
-Pages/Password.cs
+Pages/DbPassword.cs

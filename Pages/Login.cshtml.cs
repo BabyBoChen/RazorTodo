@@ -33,7 +33,7 @@ namespace RazorTodo.Pages
         public async Task<IActionResult> OnPost()
         {
             string password = Request.Form["Password"];
-            if (password == DbPassword.Password)
+            if (password == Password.Password)
             {
                 var claims = new List<Claim>
                 {
