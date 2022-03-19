@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #Db
-Db/RazorTodo.db
+RazorTodo.db
 
 # DbPassword
-Pages/DbPassword.cs
+DbPassword.cs
