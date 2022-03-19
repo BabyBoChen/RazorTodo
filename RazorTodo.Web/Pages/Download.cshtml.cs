@@ -20,7 +20,7 @@ namespace RazorTodo.Web.Pages
         }
         public IActionResult OnGet()
         {
-            string filepath = Path.Combine(_root.ContentRootPath, "Db", "RazorTodo.db");
+            string filepath = Path.Combine(_root.ContentRootPath, "RazorTodo.db");
             byte[] fileBytes = System.IO.File.ReadAllBytes(filepath);
             return File(fileBytes, "application/octet-stream", "RazorTodo.db");
         }
