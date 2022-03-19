@@ -1,0 +1,112 @@
+﻿@page
+@using RazorTodo.Web.ViewModels
+@model IndexModel
+@{
+    int tabIndex = 0;
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/index.css">
+}
+
+
+<h1 id="pageTitle">待辦事項</h1>
+
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-2-desktop
+            mdc-layout-grid__cell--span-1-tablet
+            mdc-layout-grid__cell--span-0-phone">
+        </div>
+        <div class="mdc-layout-grid__cell--span-8-desktop
+            mdc-layout-grid__cell--span-6-tablet
+            mdc-layout-grid__cell--span-4-phone">
+            <button class="mdc-button mdc-button--raised" onclick="addTodo()">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">新增</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" onclick="save()">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">儲存</span>
+            </button>
+            <a class="mdc-button mdc-button--raised" href="/Download" target="_blank">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">下載</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mdc-layout-grid" id="todoWrapper">
+    <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-2-desktop
+            mdc-layout-grid__cell--span-1-tablet
+            mdc-layout-grid__cell--span-0-phone">
+        </div>
+        <div class="mdc-layout-grid__cell--span-8-desktop
+            mdc-layout-grid__cell--span-6-tablet
+            mdc-layout-grid__cell--span-4-phone">
+            <ul class="mdc-deprecated-list mdc-deprecated-list--two-line">
+                @foreach (TodoItem row in Model.TodoItems)
+                {
+                    row.TabIndex = tabIndex;
+                    <partial name="TodoItem" model="row" />
+                    tabIndex++;
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="mdc-menu mdc-menu-surface">
+    <ul class="mdc-deprecated-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+        <li class="mdc-deprecated-list-item" role="menuitem" onclick="markDone()">
+            <span class="mdc-deprecated-list-item__ripple"></span>
+            <span class="mdc-deprecated-list-item__text">完成</span>
+        </li>
+        <li class="mdc-deprecated-list-item" role="menuitem" onclick="deleteTodo()">
+            <span class="mdc-deprecated-list-item__ripple"></span>
+            <span class="mdc-deprecated-list-item__text">刪除</span>
+        </li>
+    </ul>
+</div>
+
+<span id="alertType" style="display:none;">@((int)Model.AlertType)</span>
+<div class="mdc-dialog">
+    <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface"
+             role="alertdialog"
+             aria-modal="true"
+             aria-labelledby="alert-label"
+             aria-describedby="my-dialog-content">
+
+            <div class="mdc-dialog__content" id="my-dialog-content">
+                儲存成功！
+            </div>
+
+            <div class="mdc-dialog__actions">
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
+                    <div class="mdc-button__ripple"></div>
+                    <span class="mdc-button__label">OK</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <div class="mdc-dialog__scrim"></div>
+</div>
+
+<button onclick="topFunction()" id="btnGoTop" title="Go to top">Top</button>
+<div id="bottomMargin">
+
+</div>
+
+<form id="frmTodo" method='POST' hidden>
+</form>
+
+
+@section Scripts{
+    <script type="text/javascript" charset="UTF-8" src="~/js/index.js"></script>
+}

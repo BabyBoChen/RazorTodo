@@ -1,0 +1,34 @@
+﻿@using RazorTodo.Web.ViewModels
+@model TodoItem
+@{ 
+    TodoItem row = Model;
+}
+<li class="mdc-deprecated-list-item" tabindex="@row.TabIndex" draggable="true" data-id='@row.TodoId' id='todo_@row.TodoId' onclick="itemClicked(this)">
+    <div class="hidden-group" style="display:none;">
+        <input type="hidden" name="TodoId" value='@row.TodoId'>
+        <input type="hidden" id='isDone_@row.TodoId' name="IsDone" value='@row.IsDone'>
+        <input type="hidden" id='rowState_@row.TodoId' name="RowState" value='2'>
+    </div>
+    <span class="mdc-deprecated-list-item__ripple" draggable="true"></span>
+    <span class="mdc-deprecated-list-item__text list-item">
+        <div class="list-item-head-container">
+            <div class="list-item-leading" id='leading_@row.TodoId'>
+                @if (row.IsDone.ToString() == "1")
+                {
+                    <i class="fas fa-check-circle fa-3x" style="color:green;"></i>
+                }
+                else
+                {
+                    <i class="fas fa-minus-circle fa-3x"></i>
+                }
+            </div>
+            <div class="list-item-title">
+                <h3 class="list-title">@row.TodoName</h3>
+                <p class="list-description">@row.Description</p>
+            </div>
+        </div>
+        <div class="list-item-trailing" data-id='@row.TodoId' onclick="showMenu(this, event)">
+            <i class="fas fa-ellipsis-v fa-2x"></i>
+        </div>
+    </span>
+</li>

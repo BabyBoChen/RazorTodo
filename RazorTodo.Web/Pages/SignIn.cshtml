@@ -1,0 +1,59 @@
+﻿@page
+@model RazorTodo.Web.Pages.SignInModel
+@{
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/signIn.css">
+}
+
+<h1 id="pageTitle">通關密語</h1>
+<form method="post">
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturlUrl" />
+    <div id="errorMsg">@Model.ErrorMsg</div>
+    <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-4-desktop
+                 mdc-layout-grid__cell--span-2-tablet
+                 mdc-layout-grid__cell--span-0-phone">
+            </div>
+            <div class="mdc-layout-grid__cell--span-4-desktop
+                 mdc-layout-grid__cell--span-4-tablet
+                 mdc-layout-grid__cell--span-4-phone">
+                <label class="mdc-text-field mdc-text-field--filled" id="txtPassword">
+                    <span class="mdc-text-field__ripple"></span>
+                    <span class="mdc-floating-label" id="lblPassword">通關密語</span>
+                    <input class="mdc-text-field__input" type="password" name="Password" aria-labelledby="lblPassword">
+                    <span class="mdc-line-ripple"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-4-desktop
+                 mdc-layout-grid__cell--span-2-tablet
+                 mdc-layout-grid__cell--span-0-phone">
+            </div>
+            <div class="mdc-layout-grid__cell--span-4-desktop
+                 mdc-layout-grid__cell--span-4-tablet
+                 mdc-layout-grid__cell--span-4-phone">
+                <div id="btnWrapper">
+                    <button class="mdc-button mdc-button--raised" id="btnSubmit" type="submit">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__focus-ring"></span>
+                        <span class="mdc-button__label">登入</span>
+                    </button>
+                    <button class="mdc-button mdc-button--outlined" id="btnCancel" onclick="cancel()">
+                        <span class="mdc-button__ripple"></span>
+                        <span class="mdc-button__focus-ring"></span>
+                        <span class="mdc-button__label">回首頁</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script src="~/js/singIn.js"></script>
+}
