@@ -6,28 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorTodo.DAL;
 using RazorTodo.Web.ViewModels;
-
+using Microsoft.AspNetCore.Http;
+using RazorTodo.Service;
+using RazorTodo.DTO;
+using System.Diagnostics;
 
 namespace RazorTodo.Web.Pages
 {
     [IgnoreAntiforgeryToken(Order = 1001)]
     public class IndexModel : PageModel
     {
-        private RazorTodoContext db;
+        private RazorTodoService service;
         public List<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
         public AlertType AlertType = AlertType.NoAlert;
-        public IndexModel(RazorTodoContext db)
+        public IndexModel(RazorTodoService service)
         {
-            this.db = db;
+            this.service = new RazorTodoService();
         }
         public void OnGet()
         {
-            var todos = this.db.Todos.OrderByDescending(todo => todo.LineOrder);
+            var todos = this.service.QueryTodos().Take(10);
             foreach(var todo in todos)
             {
                 TodoItems.Add(new TodoItem(todo));
             }
-            string hasAlertStr = Request.Query["a"];
+            string hasAlertStr = HttpContext.Session.GetString("AlertType");
             if (hasAlertStr == "1")
             {
                 this.AlertType = AlertType.Success;
@@ -36,13 +39,16 @@ namespace RazorTodo.Web.Pages
             {
                 this.AlertType = AlertType.Fail;
             }
+            HttpContext.Session.SetString("AlertType","");
         }
 
         public IActionResult OnPost()
         {
+            string pageNumber = Request.Form["PageNumber"];
             if (!User.Identity.IsAuthenticated)
             {
-                return Redirect("~/?a=2");
+                HttpContext.Session.SetString("AlertType", "2");
+                return Redirect($"~/#!/{pageNumber}");
             }
 
             string[] todoIds = Request.Form["TodoId"];
@@ -65,34 +71,11 @@ namespace RazorTodo.Web.Pages
                 todoRowStates.Add(todoRowState);
             }
 
-            int rows = 0;
             try
             {
-                foreach(var todoRowState in todoRowStates)
-                {
-                    if(todoRowState.RowState == "16")
-                    {
-                        var todo = (from t in this.db.Todos
-                                    where t.TodoId == long.Parse(todoRowState.TodoId)
-                                    select t).FirstOrDefault();
-                        if(todo != null)
-                        {
-                            todo.IsDone = int.Parse(todoRowState.IsDone);
-                        }
-                    }
-                    else if(todoRowState.RowState == "8")
-                    {
-                        var todo = (from t in this.db.Todos
-                                    where t.TodoId == long.Parse(todoRowState.TodoId)
-                                    select t).FirstOrDefault();
-                        if (todo != null)
-                        {
-                            this.db.Todos.Remove(todo);
-                        }
-                    }
-                }
-                rows = this.db.SaveChanges();
-                return Redirect("~/?a=1");
+                service.SaveTodoRowStates(todoRowStates);
+                HttpContext.Session.SetString("AlertType","1");
+                return Redirect($"~/#!/{pageNumber}");
             }
             catch (Exception ex)
             {
@@ -103,12 +86,6 @@ namespace RazorTodo.Web.Pages
         
     }
 
-    public class TodoRowState
-    {
-        public string TodoId { get; set; }
-        public string IsDone { get; set; }
-        public string RowState { get; set; }
-    }
 
     public enum AlertType
     {

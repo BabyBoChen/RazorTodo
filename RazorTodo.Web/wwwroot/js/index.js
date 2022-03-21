@@ -4,7 +4,7 @@ const menu = mdc.menu.MDCMenu.attachTo(document.querySelector('.mdc-menu'));
 const alertModal = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 const alertMsg = document.getElementById("my-dialog-content");
 function addTodo(){
-    window.location.href="/TodoDetail?m=a";
+    window.location.href =`/TodoDetail?m=a&p=${page}`;
 }
 async function save(){
     let isAuthed = await fetch('/Login', {
@@ -56,6 +56,8 @@ async function save(){
             hasModified = true;
         }
     });
+    let pageNumber = document.getElementById('pageNumber');
+    frmTodo.append(pageNumber);
     if(hasModified){
         frmTodo.submit();
     }
@@ -97,7 +99,7 @@ function showMenu(div, e){
 */
 function itemClicked(item){
     let id = item.dataset.id;
-    window.location.href =`TodoDetail?id=${id}&m=e`;
+    window.location.href =`TodoDetail?id=${id}&m=e&p=${page}`;
 }
 
 function markDone(){
@@ -121,6 +123,13 @@ function deleteTodo() {
     leading.innerHTML = `<i class="fas fa-times-circle fa-3x" style="color:red;"></i>`;
 }
 
+async function nextPage(){
+    window.location.href = `/#!/${page+1}`;
+}
+
+function showAll() {
+    window.location.href = `/#!/9999`;
+}
 //Get the button:
 btnGoTop = document.getElementById("btnGoTop");
 

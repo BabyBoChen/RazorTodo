@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RazorTodo.DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using RazorTodo.Service;
 
 namespace RazorTodo.Web
 {
@@ -25,7 +26,15 @@ namespace RazorTodo.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddScoped<RazorTodoContext>();
+            services.AddScoped<RazorTodoService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -55,6 +64,8 @@ namespace RazorTodo.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

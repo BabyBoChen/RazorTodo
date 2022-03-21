@@ -1,0 +1,8 @@
+﻿@model List<RazorTodo.Web.ViewModels.TodoItem>
+
+@{ 
+    foreach(var item in Model)
+    { 
+        <partial name="TodoItem" model="item" />
+    }
+}

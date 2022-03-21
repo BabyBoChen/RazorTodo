@@ -7,7 +7,7 @@ const isDoneSwitch = mdc.switchControl.MDCSwitch.attachTo(document.querySelector
 const cbMoveToTOp = mdc.checkbox.MDCCheckbox.attachTo(document.querySelector('.mdc-checkbox'));
 const alert = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 const isDone = document.getElementById("isDone");
-/**  @@param e {MouseEvent} */
+/**  @param e {MouseEvent} */
 function isDoneChange(e){
     event.preventDefault();
     if(isDoneSwitch.selected == false){
@@ -16,9 +16,11 @@ function isDoneChange(e){
         isDone.value = 0;
     }
 }
+
 function cancel(){
     event.preventDefault();
-    window.location.href = "/Index";
+    let returnPage = document.getElementById("returnPage").value;
+    window.location.href = `/#!/${returnPage}`;
 }
 window.addEventListener("load",function(){
     let alertType = document.getElementById("alertType").innerHTML;

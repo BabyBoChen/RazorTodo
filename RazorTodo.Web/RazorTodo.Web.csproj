@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RazorTodo.DAL\RazorTodo.DAL.csproj" />
+    <ProjectReference Include="..\RazorTodo.DTO\RazorTodo.DTO.csproj" />
+    <ProjectReference Include="..\RazorTodo.Service\RazorTodo.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

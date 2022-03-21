@@ -3,7 +3,7 @@
 @{ 
     TodoItem row = Model;
 }
-<li class="mdc-deprecated-list-item" tabindex="@row.TabIndex" draggable="true" data-id='@row.TodoId' id='todo_@row.TodoId' onclick="itemClicked(this)">
+<li class="mdc-deprecated-list-item todo-item" tabindex="@row.TabIndex" draggable="true" data-id='@row.TodoId' id='todo_@row.TodoId' onclick="itemClicked(this)">
     <div class="hidden-group" style="display:none;">
         <input type="hidden" name="TodoId" value='@row.TodoId'>
         <input type="hidden" id='isDone_@row.TodoId' name="IsDone" value='@row.IsDone'>

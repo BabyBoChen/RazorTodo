@@ -20,6 +20,7 @@ else
 
 <form id="frmTodo" method="post">
     <input type="hidden" name="Mode" value="@mode">
+    <input type="hidden" id="returnPage" name="ReturnPage" value="@Model.ReturnPage" />
     <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell--span-2-desktop
@@ -308,5 +309,5 @@ else
 </div>
 
 @section Scripts{
-    <script src="~/js/todoDetail.js"></script>
+    <script src="~/js/todoDetail.js?v=3"></script>
 }

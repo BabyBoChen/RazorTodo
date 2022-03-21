@@ -3,33 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorTodo.DAL;
+using RazorTodo.Service;
 
 namespace RazorTodo.Web.Pages
 {
     [Authorize]
     public class TodoDetailModel : PageModel
     {
-        private RazorTodoContext db;
+        private RazorTodoService service;
         public string Id { get; set; }
         public Todo Todo { get; set; }
+        public int ReturnPage { get; set; }
         public Mode Mode { get; set; }
         public AlertType AlertType = AlertType.NoAlert;
 
-        public TodoDetailModel(RazorTodoContext db)
+        public TodoDetailModel(RazorTodoService service)
         {
-            this.db = db;
+            this.service = service;
         }
 
         public IActionResult OnGet()
         {
             string mode = Request.Query["m"];
             string id = Request.Query["id"];
-            int todoId = -1;
+            string p = Request.Query["p"];
+            int returnPage = 0;
+            if(int.TryParse(p, out returnPage))
+            {
+                this.ReturnPage = returnPage;
+            }
+            else
+            {
+                this.ReturnPage = 1;
+            }
 
-            string hasAlertStr = Request.Query["a"];
+
+            string hasAlertStr = HttpContext.Session.GetString("AlertType");
             if (hasAlertStr == "1")
             {
                 this.AlertType = AlertType.Success;
@@ -38,13 +51,13 @@ namespace RazorTodo.Web.Pages
             {
                 this.AlertType = AlertType.Fail;
             }
+            HttpContext.Session.SetString("AlertType", "");
 
+            int todoId = 0;
             if (int.TryParse(id, out todoId) && mode == "e")
             {
                 this.Mode = Mode.Edit;
-                this.Todo = (from t in this.db.Todos
-                             where t.TodoId == todoId
-                             select t).FirstOrDefault();
+                this.Todo = service.GetTodoByTodoId(todoId);
                 if (this.Todo != null)
                 {
                     return Page();
@@ -77,10 +90,10 @@ namespace RazorTodo.Web.Pages
             {
                 try
                 {
-                    long lineOrder = 0;
+                    bool moveToTop = false;
                     if (Request.Form["MoveToTop"] == "1")
                     {
-                        lineOrder = this.db.Todos.Max(todo => todo.LineOrder).GetValueOrDefault();
+                        moveToTop = true;
                     }
 
                     DateTime createdDate = new DateTime();
@@ -105,23 +118,22 @@ namespace RazorTodo.Web.Pages
                         todo.EstDate = null;
                     }
 
-                    var row = (from t in this.db.Todos
-                               where t.TodoId == todo.TodoId
-                               select t).FirstOrDefault();
-                    if(row != null)
+                    this.service.SaveTodo(todo, moveToTop);
+
+                    HttpContext.Session.SetString("AlertType", "1");
+
+                    string p = Request.Form["ReturnPage"];
+                    int returnPage = 0;
+                    if (int.TryParse(p, out returnPage))
                     {
-                        row.TodoName = todo.TodoName;
-                        row.IsDone = todo.IsDone;
-                        row.Description = todo.Description;
-                        row.CreatedDate = todo.CreatedDate;
-                        if(Request.Form["MoveToTop"] == "1")
-                        {
-                            row.LineOrder = lineOrder + 1;
-                        }
-                        row.EstDate = todo.EstDate;
-                        this.db.SaveChanges();
+                        this.ReturnPage = returnPage;
                     }
-                    return Redirect($"~/TodoDetail?id={todo.TodoId}&m=e&a=1");
+                    else
+                    {
+                        this.ReturnPage = 1;
+                    }
+
+                    return Redirect($"~/TodoDetail?id={todo.TodoId}&m=e&p={this.ReturnPage}");
                 }
                 catch (Exception ex)
                 {
@@ -133,11 +145,9 @@ namespace RazorTodo.Web.Pages
             {
                 try
                 {
-                    long lineOrder = 0;
-                    lineOrder = this.db.Todos.Max(todo => todo.LineOrder).GetValueOrDefault();
-                    var row = new Todo();
-                    row.TodoName = todo.TodoName;
-                    row.IsDone = todo.IsDone;
+                    var newRow = new Todo();
+                    newRow.TodoName = todo.TodoName;
+                    newRow.IsDone = todo.IsDone;
                     DateTime createdDate = new DateTime();
                     bool createdDateCanParse = DateTime.TryParse(todo.CreatedDate, out createdDate);
                     if (createdDateCanParse)
@@ -148,9 +158,8 @@ namespace RazorTodo.Web.Pages
                     {
                         todo.CreatedDate = DateTime.Now.ToString("yyyy-MM-dd");
                     }
-                    row.CreatedDate = todo.CreatedDate;
-                    row.Description = todo.Description;
-                    row.LineOrder = lineOrder+1;
+                    newRow.CreatedDate = todo.CreatedDate;
+                    newRow.Description = todo.Description;
                     DateTime estDate = new DateTime();
                     bool estDateCanParse = DateTime.TryParse(todo.EstDate, out estDate);
                     if (estDateCanParse)
@@ -161,10 +170,24 @@ namespace RazorTodo.Web.Pages
                     {
                         todo.EstDate = null;
                     }
-                    row.EstDate = todo.EstDate;
-                    this.db.Todos.Add(row);
-                    this.db.SaveChanges();
-                    return Redirect("~/Index?a=1");
+                    newRow.EstDate = todo.EstDate;
+
+                    service.AddTodo(newRow);
+
+                    HttpContext.Session.SetString("AlertType", "1");
+
+                    string p = Request.Form["ReturnPage"];
+                    int returnPage = 0;
+                    if (int.TryParse(p, out returnPage))
+                    {
+                        this.ReturnPage = returnPage;
+                    }
+                    else
+                    {
+                        this.ReturnPage = 1;
+                    }
+
+                    return Redirect($"~/#!/{this.ReturnPage}");
                 }
                 catch (Exception ex)
                 {
