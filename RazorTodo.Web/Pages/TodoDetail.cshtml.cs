@@ -12,6 +12,7 @@ using RazorTodo.Service;
 namespace RazorTodo.Web.Pages
 {
     [Authorize]
+    [IgnoreAntiforgeryToken(Order = 1001)]
     public class TodoDetailModel : PageModel
     {
         private RazorTodoService service;

@@ -5,10 +5,10 @@
     int tabIndex = 0;
 }
 @section Styles{
-    <link rel="stylesheet" href="~/css/index.css?v=3">
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true">
 }
 @section HeadScripts{ 
-    <script src="~/js/pageRouter.js?v=3"></script>
+    <script src="~/js/pageRouter.js" asp-append-version="true"></script>
 }
 
 <h1 id="pageTitle">待辦事項</h1>
@@ -75,30 +75,7 @@
     </ul>
 </div>
 
-<span id="alertType" style="display:none;">@((int)Model.AlertType)</span>
-<div class="mdc-dialog">
-    <div class="mdc-dialog__container">
-        <div class="mdc-dialog__surface"
-             role="alertdialog"
-             aria-modal="true"
-             aria-labelledby="alert-label"
-             aria-describedby="my-dialog-content">
-
-            <div class="mdc-dialog__content" id="my-dialog-content">
-                儲存成功！
-            </div>
-
-            <div class="mdc-dialog__actions">
-                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
-                    <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">OK</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-    <div class="mdc-dialog__scrim"></div>
-</div>
+<partial name="AlertDialog" model="(int)Model.AlertType" />
 
 <button onclick="topFunction()" id="btnGoTop" title="Go to top">Top</button>
 <div id="bottomMargin">
@@ -132,5 +109,5 @@
 
 
 @section Scripts{
-    <script type="text/javascript" charset="UTF-8" src="~/js/index.js?v=3"></script>
+    <script type="text/javascript" charset="UTF-8" src="~/js/index.js" asp-append-version="true"></script>
 }

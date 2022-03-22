@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorTodo.Web", "RazorTodo.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorTodo.DAL", "RazorTodo.DAL\RazorTodo.DAL.csproj", "{33B74D1D-9255-4BC9-B246-5E1F0CF18E69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorTodo.Service", "RazorTodo.Service\RazorTodo.Service.csproj", "{D562455A-33F5-4285-AC2D-D35CE84E52C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorTodo.Service", "RazorTodo.Service\RazorTodo.Service.csproj", "{D562455A-33F5-4285-AC2D-D35CE84E52C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorTodo.DTO", "RazorTodo.DTO\RazorTodo.DTO.csproj", "{240F88F8-3B77-4FF2-A6D6-BA65F2DFDD9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorTodo.DTO", "RazorTodo.DTO\RazorTodo.DTO.csproj", "{240F88F8-3B77-4FF2-A6D6-BA65F2DFDD9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

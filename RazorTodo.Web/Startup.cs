@@ -33,13 +33,19 @@ namespace RazorTodo.Web
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            services.AddScoped<RazorTodoContext>();
             services.AddScoped<RazorTodoService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/SignIn";
+            });
+            services.AddCors(cors => 
+            {
+                cors.AddPolicy("Calendar", policy => 
+                {
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
             });
         }
 
@@ -66,6 +72,7 @@ namespace RazorTodo.Web
             app.UseAuthorization();
 
             app.UseSession();
+            //app.UseCors("Calendar");
 
             app.UseEndpoints(endpoints =>
             {

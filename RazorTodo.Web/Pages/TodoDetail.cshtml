@@ -6,7 +6,7 @@
     Mode mode = Model.Mode;
 }
 @section Styles{
-    <link rel="stylesheet" href="~/css/todo.css">
+    <link rel="stylesheet" href="~/css/todo.css" asp-append-version="true">
 }
 
 @if (mode == Mode.Edit)
@@ -282,32 +282,8 @@ else
         </div>
     </div>
 </form>
-
-<span id="alertType" style="display:none;">@((int)Model.AlertType)</span>
-<div class="mdc-dialog">
-    <div class="mdc-dialog__container">
-        <div class="mdc-dialog__surface"
-             role="alertdialog"
-             aria-modal="true"
-             aria-labelledby="alert-label"
-             aria-describedby="my-dialog-content">
-
-            <div class="mdc-dialog__content" id="my-dialog-content">
-                儲存成功！
-            </div>
-
-            <div class="mdc-dialog__actions">
-                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
-                    <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">OK</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-    <div class="mdc-dialog__scrim"></div>
-</div>
+<partial name="AlertDialog" model="(int)Model.AlertType" />
 
 @section Scripts{
-    <script src="~/js/todoDetail.js?v=3"></script>
+    <script src="~/js/todoDetail.js" asp-append-version="true"></script>
 }

@@ -21,7 +21,7 @@ async function redirect() {
     let targetPath = window.location.href.split("/#!/").slice(-1)[0];
     page = Number(targetPath);
     if (page == 1) return;
-    let html = await fetch(`/IndexAsync?p=${page + 1}`, {
+    let html = await fetch(`/IndexAsync?p=${page}`, {
         method: "GET",
     }).then(function (prop) {
         return prop.text();
