@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorTodo.DAL;
 using RazorTodo.Web.ViewModels;
 using RazorTodo.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RazorTodo.Web.Pages
 {
+    [Authorize]
     public class IndexAsyncModel : PageModel
     {
         private RazorTodoService service;

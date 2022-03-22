@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <None Update="RazorTodo.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
