@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 #Db
 RazorTodo.Web/RazorTodo.db
+RazorTodo.Test/RazorTodo.db
 
 # DbPassword
 DbPassword.cs

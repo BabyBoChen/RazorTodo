@@ -91,6 +91,17 @@ namespace RazorTodo.Service
             this.db.Todos.Add(todo);
         }
 
+        public List<Todo> GetTodosByMonth(DateTime date)
+        {
+            var todos = this.db.GetTodosByMonth(date);
+            return todos;
+        }
+
+        public void TurnOffProxy()
+        {
+            this.db.ChangeTracker.LazyLoadingEnabled = false;
+        }
+
         public void Dispose()
         {
             this.db?.Dispose();
