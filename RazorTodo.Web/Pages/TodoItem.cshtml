@@ -13,13 +13,31 @@
     <span class="mdc-deprecated-list-item__text list-item">
         <div class="list-item-head-container">
             <div class="list-item-leading" id='leading_@row.TodoId'>
+                @{ 
+                    DateTime due = DateTime.MinValue;
+                    bool canParse = DateTime.TryParse(row.EstDate, out due);
+                }
                 @if (row.IsDone.ToString() == "1")
                 {
                     <i class="fas fa-check-circle fa-3x" style="color:green;"></i>
                 }
                 else
                 {
-                    <i class="fas fa-minus-circle fa-3x"></i>
+                    if (canParse)
+                    {
+                        if (due <= DateTime.Now.Date)
+                        {
+                            <i class="fas fa-exclamation-circle fa-3x" style="color:goldenrod;"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-minus-circle fa-3x"></i>
+                        }
+                    }
+                    else
+                    {
+                        <i class="fas fa-minus-circle fa-3x"></i>
+                    }
                 }
             </div>
             <div class="list-item-title">

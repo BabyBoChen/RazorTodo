@@ -73,7 +73,7 @@ else
                         </span>
                         <span class="mdc-notched-outline__trailing"></span>
                     </span>
-                    <input type="text" class="mdc-text-field__input" name="TodoName" aria-labelledby="lblTodoName" value='@todo.TodoName' required>
+                    <input autocomplete="off" type="text" class="mdc-text-field__input" name="TodoName" aria-labelledby="lblTodoName" value='@todo.TodoName' required>
                 </label>
                 @* <input class="form-control" id="todoName" name="TodoName" type="text" value='@todo["TodoName"]'/> *@
             </div>
@@ -211,7 +211,7 @@ else
                         <span class="mdc-notched-outline__trailing"></span>
                     </span>
                     <span class="mdc-text-field__resizer">
-                        <textarea class="mdc-text-field__input" name="Description" aria-labelledby="lblDescription">@todo.Description</textarea>
+                        <textarea class="mdc-text-field__input description" name="Description" aria-labelledby="lblDescription">@todo.Description</textarea>
                     </span>
                 </label>
                 @* <textarea class="form-control" id='description' name="Description">@todo["Description"]</textarea> *@

@@ -89,12 +89,18 @@ namespace RazorTodo.Service
         {
             todo.LineOrder = GetMaxLineOrder() + 1;
             this.db.Todos.Add(todo);
+            this.db.SaveChanges();
         }
 
         public List<Todo> GetTodosByMonth(DateTime date)
         {
             var todos = this.db.GetTodosByMonth(date);
             return todos;
+        }
+
+        public void TurnOnProxy()
+        {
+            this.db.ChangeTracker.LazyLoadingEnabled = true;
         }
 
         public void TurnOffProxy()
