@@ -34,6 +34,7 @@ namespace RazorTodo.Web
                 options.Cookie.IsEssential = true;
             });
             services.AddScoped<RazorTodoService>();
+            services.AddScoped<CalendarService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>

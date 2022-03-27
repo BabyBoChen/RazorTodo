@@ -12,14 +12,14 @@ using RazorTodo.DAL;
 
 namespace RazorTodo.Service
 {
-    public class CalendarService
+    public class CalendarService : IDisposable
     {
+        private RazorTodoContext db = new RazorTodoContext();
         public void ImportGovernmentCalendar(string filepath)
         {
             var gcds = this.ReadCsv(filepath);
             this.SaveGovernmentCalendar(gcds);
         }
-    
         public List<GovernmentCalendarDate> ReadCsv(string filepath)
         {
             List<GovernmentCalendarDate> gcds = new List<GovernmentCalendarDate>();
@@ -125,6 +125,34 @@ namespace RazorTodo.Service
                 affectedRowCount = db.SaveChanges();
             }
             return affectedRowCount;
+        }
+
+        public List<GovernmentCalendarDate> GetCalendarByYearAndMonth(int y, int m)
+        {
+            var gcds = new List<GovernmentCalendarDate>();
+            var calendars = (from date in this.db.GovernmentCalendars
+                             where date.Year == y && date.Month == m
+                             select date).OrderBy(d => d.Date);
+            foreach(var date in calendars)
+            {
+                var gcd = new GovernmentCalendarDate()
+                {
+                    DateString = date.DateString,
+                    Year = Convert.ToInt32(date.Year),
+                    Month = Convert.ToInt32(date.Month),
+                    Date = Convert.ToInt32(date.Date),
+                    Day = Convert.ToInt32(date.Day),
+                    IsHoliday = date.IsHoliday == 1,
+                    Description = date.Description,
+                };
+                gcds.Add(gcd);
+            }
+            return gcds;
+        }
+
+        public void Dispose()
+        {
+            this.db?.Dispose();
         }
     }
 }
