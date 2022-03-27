@@ -363,7 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #Db
-RazorTodo.DAL/RazorTodo.db
 RazorTodo.Web/RazorTodo.db
 RazorTodo.Test/RazorTodo.db
 
