@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="27.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RazorTodo.DAL\RazorTodo.DAL.csproj" />
     <ProjectReference Include="..\RazorTodo.DTO\RazorTodo.DTO.csproj" />
   </ItemGroup>

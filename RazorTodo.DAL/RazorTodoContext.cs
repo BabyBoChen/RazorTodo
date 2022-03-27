@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -18,6 +17,7 @@ namespace RazorTodo.DAL
         {
         }
 
+        public virtual DbSet<GovernmentCalendar> GovernmentCalendars { get; set; }
         public virtual DbSet<Todo> Todos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,6 +31,11 @@ namespace RazorTodo.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GovernmentCalendar>(entity =>
+            {
+                entity.ToTable("GovernmentCalendar");
+            });
+
             modelBuilder.Entity<Todo>(entity =>
             {
                 entity.ToTable("todo");
@@ -50,6 +55,5 @@ namespace RazorTodo.DAL
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
     }
 }

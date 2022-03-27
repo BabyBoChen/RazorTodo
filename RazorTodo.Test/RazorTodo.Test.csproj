@@ -19,6 +19,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="2020.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="2021.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="2022.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="2022utf8.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RazorTodo.db">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RazorTodo.DAL;
+using RazorTodo.Service;
 using System.Linq;
 
 namespace RazorTodo.Test
@@ -15,7 +16,15 @@ namespace RazorTodo.Test
             {
                 var todo = db.GetTodosByMonth(new System.DateTime(2022,2,1));
             }
+        }
 
+        [TestMethod]
+        public void TestImportGovernmentCalendar()
+        {
+            var service = new CalendarService();
+            service.ImportGovernmentCalendar("2020.csv");
+            service.ImportGovernmentCalendar("2021.csv");
+            service.ImportGovernmentCalendar("2022.csv");
         }
     }
 }
