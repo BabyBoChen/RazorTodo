@@ -130,10 +130,41 @@ namespace RazorTodo.Service
         public List<GovernmentCalendarDate> GetCalendarByYearAndMonth(int y, int m)
         {
             var gcds = new List<GovernmentCalendarDate>();
+
+            DateTime firstDateOfThisMonth = DateTime.MinValue;
+            bool isValid = false;
+            try
+            {
+                firstDateOfThisMonth = new DateTime(y,m,1).Date;
+                isValid = true;
+            }
+            catch (Exception)
+            {
+                isValid = false;
+            }
+
+            if(isValid == false)
+            {
+                return gcds;
+            }
+
+            int firstDayOfThisMonth = (int)firstDateOfThisMonth.DayOfWeek;
+            DateTime firstDateOfThisCalendar = firstDateOfThisMonth.AddDays(firstDayOfThisMonth * -1);
+
+            int lastDayOfThisMonth = (int)firstDateOfThisMonth.AddMonths(1).AddDays(-1).DayOfWeek;
+            DateTime lastDateOfThisCalendar = firstDateOfThisMonth.AddMonths(1).AddDays(-1).AddDays(6- lastDayOfThisMonth);
+
             var calendars = (from date in this.db.GovernmentCalendars
-                             where date.Year == y && date.Month == m
-                             select date).OrderBy(d => d.Date);
-            foreach(var date in calendars)
+                             where date.Year >= firstDateOfThisCalendar.Year && date.Year <= lastDateOfThisCalendar.Year
+                             select date);
+
+            calendars = (from date in calendars
+                         where (date.Year * 10000 + date.Month * 100 + date.Date) >= (firstDateOfThisCalendar.Year * 10000 + firstDateOfThisCalendar.Month * 100 + firstDateOfThisCalendar.Day)
+                         && (date.Year * 10000 + date.Month * 100 + date.Date) <= (lastDateOfThisCalendar.Year * 10000 + lastDateOfThisCalendar.Month * 100 + lastDateOfThisCalendar.Day)
+                         orderby date.Year, date.Month, date.Date
+                         select date);
+
+            foreach (var date in calendars)
             {
                 var gcd = new GovernmentCalendarDate()
                 {

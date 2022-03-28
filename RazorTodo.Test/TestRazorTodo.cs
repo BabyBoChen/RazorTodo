@@ -21,10 +21,16 @@ namespace RazorTodo.Test
         [TestMethod]
         public void TestImportGovernmentCalendar()
         {
-            var service = new CalendarService();
-            service.ImportGovernmentCalendar("2020.csv");
-            service.ImportGovernmentCalendar("2021.csv");
-            service.ImportGovernmentCalendar("2022.csv");
+            
+        }
+
+        [TestMethod]
+        public void TestGetCalendarByYearAndMonth()
+        {
+            using (var service = new CalendarService())
+            {
+                var dateInfos = service.GetCalendarByYearAndMonth(2022,1);
+            }
         }
     }
 }
