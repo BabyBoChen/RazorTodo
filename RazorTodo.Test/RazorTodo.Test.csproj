@@ -31,6 +31,9 @@
     <None Update="2022utf8.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="2023.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="RazorTodo.db">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
