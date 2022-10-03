@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorTodo.DAL;
@@ -9,6 +10,7 @@ using RazorTodo.Service;
 
 namespace RazorTodo.Web.Pages
 {
+    [Authorize]
     public class DateDetailModel : PageModel
     {
         public DateTime? TargetDate { get; set; } = null;
