@@ -1,0 +1,53 @@
+﻿#pageTitle {
+    width: 100%;
+    text-align: center;
+}
+
+#txtAreaWrapper{
+    text-align:center;
+}
+
+#description {
+    width: 20rem;
+    height: 5rem;
+}
+
+.mdc-text-field__resizer {
+    resize: none;
+}
+
+#tbWrapper{
+    margin:10px;
+    padding-bottom:20px;
+    width:calc(100% - 20px);
+    overflow:auto;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+}
+
+#tbTodo {
+    margin: auto;
+}
+
+.cell {
+    max-width:10rem;
+    max-height:1.5rem;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.expand {
+    max-height: 10rem;
+    white-space: initial;
+}
+
+.btn-wrapper{
+    text-align:center;
+}

@@ -110,13 +110,14 @@
         calendar.onCalendarClick = function (day) {
             /** @@type {Date} */
             let clickedDate = day;
-            calendar.calendarDayInfos.forEach(function (dayInfo) {
-                if (dayInfo.date.getFullYear() == clickedDate.getFullYear() &&
-                    dayInfo.date.getMonth() == clickedDate.getMonth() &&
-                    dayInfo.date.getDate() == clickedDate.getDate()) {
-                    alert(`${dayInfo.date.getMonth() + 1}/${dayInfo.date.getDate()} ${dayInfo.description}`);
-                }
-            });
+            location.href = `DateDetail?y=${clickedDate.getFullYear()}&m=${clickedDate.getMonth()+1}&d=${clickedDate.getDate()}`;
+            //calendar.calendarDayInfos.forEach(function (dayInfo) {
+            //    if (dayInfo.date.getFullYear() == clickedDate.getFullYear() &&
+            //        dayInfo.date.getMonth() == clickedDate.getMonth() &&
+            //        dayInfo.date.getDate() == clickedDate.getDate()) {
+            //        alert(`${dayInfo.date.getMonth() + 1}/${dayInfo.date.getDate()} ${dayInfo.description}`);
+            //    }
+            //});
         };
         window.addEventListener('resize', function () {
             w = window.innerWidth * 0.8;

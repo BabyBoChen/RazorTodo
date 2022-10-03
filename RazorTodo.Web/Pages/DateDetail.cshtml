@@ -1,0 +1,91 @@
+﻿@page
+@using RazorTodo.DAL
+@model RazorTodo.Web.Pages.DateDetailModel
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/dateDetail.css" asp-append-version="true">
+}
+
+@{
+    DateTime targetDate = Model.TargetDate.HasValue ? Model.TargetDate.Value : DateTime.MinValue;
+    string govDateDesc = !string.IsNullOrWhiteSpace(Model.GovDate?.Description) ? Model.GovDate.Description : "無";
+}
+
+<h1 id="pageTitle">@targetDate.ToString("yyyy年MM月dd日")</h1>
+
+<div id="txtAreaWrapper">
+    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea" id="description">
+        <span class="mdc-notched-outline">
+            <span class="mdc-notched-outline__leading"></span>
+            <span class="mdc-notched-outline__notch">
+                <span class="mdc-floating-label" id="lblDescription">政府機關行事曆</span>
+            </span>
+            <span class="mdc-notched-outline__trailing"></span>
+        </span>
+        <span class="mdc-text-field__resizer">
+            <textarea class="mdc-text-field__input description" name="Description" aria-labelledby="lblDescription" readonly>@govDateDesc</textarea>
+        </span>
+    </label>
+</div>
+
+<h2 id="pageTitle">待辦事項</h2>
+<div id="tbWrapper">
+    <table id="tbTodo">
+        <thead>
+            <tr>
+                <th><div class="cell">編號</div></th>
+                <th><div class="cell">標題</div></th>
+                <th><div class="cell">已完成</div></th>
+                <th><div class="cell">建立日期</div></th>
+                <th><div class="cell">預訂日期</div></th>
+                <th><div class="cell">說明</div></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(Todo t in Model.Todos)
+            {
+                string isDone = "";
+                if (t.IsDone == 1) 
+                {
+                    isDone = "V";
+                }
+                <tr>
+                    <td>
+                        <div class="cell">@t.TodoId</div>
+                    </td>
+                    <td>
+                        <div class="cell"><a href="/TodoDetail?id=@t.TodoId&m=e&p=1">@t.TodoName</a></div>
+                    </td>
+                    <td>
+                        <div class="cell">@isDone</div>
+                    </td>
+                    <td>
+                        <div class="cell">@t.CreatedDate</div>
+                    </td>
+                    <td>
+                        <div class="cell">@t.EstDate</div>
+                    </td>
+                    <td>
+                        <div class="cell" onclick="expandDesc(this)">@t.Description</div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="btn-wrapper">
+    <a class="mdc-button mdc-button--raised" href="/Calendar">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__focus-ring"></span>
+        <span class="mdc-button__label">回月曆</span>
+    </a>
+    <a class="mdc-button mdc-button--raised" href="/#!/1">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__focus-ring"></span>
+        <span class="mdc-button__label">回首頁</span>
+    </a>
+</div>
+
+@section Scripts{
+    <script src="~/js/dateDetail.js" asp-append-version="true"></script>
+}

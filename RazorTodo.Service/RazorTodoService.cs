@@ -98,6 +98,34 @@ namespace RazorTodo.Service
             return todos;
         }
 
+        public GovernmentCalendar GetGovDate(string y, string m, string d)
+        {
+            GovernmentCalendar govDate = null;
+            DateTime targetDate = DateTime.MinValue;
+            bool canParseTargetDate = DateTime.TryParse($"{y}-{m}-{d}", out targetDate);
+            if(canParseTargetDate)
+            {
+                govDate = (from gd in this.db.GovernmentCalendars
+                           where gd.DateString == targetDate.ToString("yyyy-MM-dd")
+                           select gd).FirstOrDefault();
+            }
+            return govDate;
+        }
+
+        public List<Todo> GetTodosByDate(string y, string m, string d)
+        {
+            List<Todo> todos = new List<Todo>();
+            DateTime targetDate = DateTime.MinValue;
+            bool canParseTargetDate = DateTime.TryParse($"{y}-{m}-{d}", out targetDate);
+            if(canParseTargetDate)
+            {
+                todos = (from todo in this.db.Todos
+                         where todo.EstDate == targetDate.ToString("yyyy-MM-dd")
+                         select todo).ToList();
+            }
+            return todos;
+        }
+
         public void TurnOnProxy()
         {
             this.db.ChangeTracker.LazyLoadingEnabled = true;
