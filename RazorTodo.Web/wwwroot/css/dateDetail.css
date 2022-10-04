@@ -9,6 +9,7 @@
 
 #description {
     width: 20rem;
+    max-width:80%;
     height: 5rem;
 }
 
@@ -37,14 +38,16 @@ th, td {
 }
 
 .cell {
-    max-width:10rem;
-    max-height:1.5rem;
-    white-space:nowrap;
-    overflow:hidden;
+    width: unset;
+    max-width: 10rem;
+    max-height: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .expand {
-    max-height: 10rem;
+    max-height: none;
+    width:10rem;
     white-space: initial;
 }
 
