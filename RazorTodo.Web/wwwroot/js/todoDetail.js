@@ -17,6 +17,16 @@ function isDoneChange(e){
     }
 }
 
+/**
+ * @param {HTMLButtonElement} btnSave
+ */
+function btnSaveClicked(btnSave) {
+    btnSave.disabled = true;
+    /** @type {HTMLFormElement} */
+    let frmTodo = document.getElementById("frmTodo");
+    frmTodo.submit();
+}
+
 function cancel(){
     event.preventDefault();
     let returnPage = document.getElementById("returnPage").value;

@@ -6,7 +6,11 @@ const alertMsg = document.getElementById("my-dialog-content");
 function addTodo(){
     window.location.href =`/TodoDetail?m=a&p=${page}`;
 }
-async function save(){
+
+/**
+ * @param {HTMLButtonElement} btnSave
+ */
+async function save(btnSave){
     let isAuthed = await fetch('/Login', {
         method:'get'
     }).then(function (res) {
@@ -58,7 +62,8 @@ async function save(){
     });
     let pageNumber = document.getElementById('pageNumber');
     frmTodo.append(pageNumber);
-    if(hasModified){
+    if (hasModified) {
+        btnSave.disabled = true;
         frmTodo.submit();
     }
 }
