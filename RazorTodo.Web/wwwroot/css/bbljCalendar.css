@@ -4,9 +4,11 @@
     margin: 0px;
 }
 .page-title {
-    width: 100%;
+    width: calc(100% - 22px);
+    font-size: 2em;
+    font-weight: bolder;
     text-align: center;
-    margin:5px;
+    padding: 10px;
 }
 .dial-wrapper {
     text-align: center;
