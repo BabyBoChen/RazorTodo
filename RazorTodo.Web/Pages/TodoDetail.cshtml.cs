@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorTodo.DAL;
-using RazorTodo.Service;
+using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web.Pages
 {
@@ -15,14 +15,14 @@ namespace RazorTodo.Web.Pages
     [IgnoreAntiforgeryToken(Order = 1001)]
     public class TodoDetailModel : PageModel
     {
-        private RazorTodoService service;
+        private IRazorTodoService service;
         public string Id { get; set; }
         public Todo Todo { get; set; }
         public int ReturnPage { get; set; }
         public Mode Mode { get; set; }
         public AlertType AlertType = AlertType.NoAlert;
 
-        public TodoDetailModel(RazorTodoService service)
+        public TodoDetailModel(IRazorTodoService service)
         {
             this.service = service;
         }

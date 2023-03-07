@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorTodo.DAL;
+using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 using RazorTodo.Service;
 
 namespace RazorTodo.Web.Pages
@@ -17,6 +18,12 @@ namespace RazorTodo.Web.Pages
         public GovernmentCalendar GovDate { get; set; }
         public List<Todo> Todos { get; set; } = new List<Todo>();
 
+        private IRazorTodoService service;
+
+        public DateDetailModel(IRazorTodoService service)
+        {
+            this.service = service;
+        }
 
         public void OnGet()
         {
@@ -29,11 +36,8 @@ namespace RazorTodo.Web.Pages
             {
                 this.TargetDate = targetDate;
             }
-            using (var service = new RazorTodoService())
-            {
-                this.GovDate = service.GetGovDate(y, m, d);
-                this.Todos = service.GetTodosByDate(y, m, d);
-            }
+            this.GovDate = service.GetGovDate(y, m, d);
+            this.Todos = service.GetTodosByDate(y, m, d);
             return;
         }
     }

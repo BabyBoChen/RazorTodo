@@ -1,9 +1,10 @@
 ﻿@page
-@using RazorTodo.DAL
+@using RazorTodo.Abstraction.Models
 @model RazorTodo.Web.Pages.DateDetailModel
 
 @section Styles{
     <link rel="stylesheet" href="~/css/dateDetail.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/lib/jatatable/jatatable.css" asp-append-version="true">
 }
 
 @{
@@ -33,12 +34,12 @@
     <table id="tbTodo">
         <thead>
             <tr>
-                <th><div class="cell">編號</div></th>
-                <th><div class="cell">標題</div></th>
-                <th><div class="cell">已完成</div></th>
-                <th><div class="cell">建立日期</div></th>
-                <th><div class="cell">預訂日期</div></th>
-                <th><div class="cell">說明</div></th>
+                <th>編號</th>
+                <th style="max-width: 168px; width: 168px;">標題</th>
+                <th>已完成</th>
+                <th>建立日期</th>
+                <th>預訂日期</th>
+                <th style="max-width: 210px; width: 210px;">說明</th>
             </tr>
         </thead>
         <tbody>
@@ -51,22 +52,22 @@
                 }
                 <tr>
                     <td>
-                        <div class="cell">@t.TodoId</div>
+                        @t.TodoId
                     </td>
                     <td>
-                        <div class="cell"><a href="/TodoDetail?id=@t.TodoId&m=e&p=1">@t.TodoName</a></div>
+                        <a href="/TodoDetail?id=@t.TodoId&m=e&p=1">@t.TodoName</a>
                     </td>
                     <td>
-                        <div class="cell">@isDone</div>
+                        @isDone
                     </td>
                     <td>
-                        <div class="cell">@t.CreatedDate</div>
+                        @t.CreatedDate
                     </td>
                     <td>
-                        <div class="cell">@t.EstDate</div>
+                        @t.EstDate
                     </td>
                     <td>
-                        <div class="cell" onclick="expandDesc(this)">@t.Description</div>
+                        @t.Description
                     </td>
                 </tr>
             }
@@ -79,7 +80,7 @@
         <span class="mdc-button__focus-ring"></span>
         <span class="mdc-button__label">回月曆</span>
     </a>
-    <a class="mdc-button mdc-button--raised" href="/#!/1">
+    <a class="mdc-button mdc-button--outlined" href="/#!/1">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__focus-ring"></span>
         <span class="mdc-button__label">回首頁</span>
@@ -87,5 +88,13 @@
 </div>
 
 @section Scripts{
+    <script src="~/lib/jatatable/jatatable.js" asp-append-version="true"></script>
     <script src="~/js/dateDetail.js" asp-append-version="true"></script>
+    <script>
+        const tbTodo = document.getElementById("tbTodo");
+        Jatatable.init(tbTodo, {
+            autoColumnWidth: false,
+            defaultColumnWidth: 75,
+        });
+    </script>
 }

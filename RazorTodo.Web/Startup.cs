@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using RazorTodo.DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RazorTodo.Service;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web
 {
@@ -29,25 +30,25 @@ namespace RazorTodo.Web
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(15);
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            services.AddScoped<RazorTodoService>();
-            services.AddScoped<CalendarService>();
+            services.AddScoped<IRazorTodoService, RazorTodoService>();
+            services.AddScoped<ICalendarService, CalendarService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/SignIn";
             });
-            services.AddCors(cors => 
-            {
-                cors.AddPolicy("Calendar", policy => 
-                {
-                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                });
-            });
+            //services.AddCors(cors => 
+            //{
+            //    cors.AddPolicy("Calendar", policy => 
+            //    {
+            //        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            //    });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

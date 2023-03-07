@@ -1,27 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorTodo.DAL;
 using RazorTodo.Web.ViewModels;
 using Microsoft.AspNetCore.Http;
-using RazorTodo.Service;
-using RazorTodo.DTO;
-using System.Diagnostics;
+using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web.Pages
 {
     [IgnoreAntiforgeryToken(Order = 1001)]
     public class IndexModel : PageModel
     {
-        private RazorTodoService service;
+        private IRazorTodoService service;
         public List<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
         public AlertType AlertType = AlertType.NoAlert;
-        public IndexModel(RazorTodoService service)
+
+        public IndexModel(IRazorTodoService service)
         {
-            this.service = new RazorTodoService();
+            this.service = service;
         }
         public void OnGet()
         {

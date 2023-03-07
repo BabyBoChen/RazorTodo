@@ -17,40 +17,16 @@
     resize: none;
 }
 
-#tbWrapper{
-    margin:10px;
-    padding-bottom:20px;
-    width:calc(100% - 20px);
-    overflow:auto;
-}
-
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 5px;
-}
-
-#tbTodo {
+#tbWrapper {
+    width: 90%;
+    text-align: center;
     margin: auto;
+    padding-bottom: 1em;
+    overflow: auto;
 }
 
-.cell {
-    width: unset;
-    max-width: 10rem;
-    max-height: 1.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.expand {
-    max-height: none;
-    width:10rem;
-    white-space: initial;
-}
-
-.btn-wrapper{
-    text-align:center;
+.btn-wrapper {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 2em;
 }

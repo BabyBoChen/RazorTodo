@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RazorTodo.Abstraction\RazorTodo.Abstraction.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="RazorTodo.db">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

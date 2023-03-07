@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
-using RazorTodo.DAL;
 using System.Diagnostics;
-using RazorTodo.DTO;
 using System.Collections.Generic;
+using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Service
 {
-    public class RazorTodoService : IDisposable
+    public class RazorTodoService : IRazorTodoService
     {
-        private RazorTodoContext db = new RazorTodoContext();
+        private IDbContext db { get; set; } = ServiceContainer.GetTransient<IDbContext>();
 
         public IOrderedQueryable<Todo> QueryTodos()
         {
@@ -126,14 +126,9 @@ namespace RazorTodo.Service
             return todos;
         }
 
-        public void TurnOnProxy()
+        public void SetProxyEnabled(bool isEnabled)
         {
-            this.db.ChangeTracker.LazyLoadingEnabled = true;
-        }
-
-        public void TurnOffProxy()
-        {
-            this.db.ChangeTracker.LazyLoadingEnabled = false;
+            this.db.SetProxyEnabled(isEnabled);
         }
 
         public void Dispose()

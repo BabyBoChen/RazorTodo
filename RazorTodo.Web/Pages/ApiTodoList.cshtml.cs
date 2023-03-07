@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorTodo.Service;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web.Pages
 {
     [IgnoreAntiforgeryToken(Order = 1001)]
     public class ApiTodoListModel : ApiPageModel
     {
-        private RazorTodoService service;
-        public ApiTodoListModel(RazorTodoService service)
+        private IRazorTodoService service;
+        public ApiTodoListModel(IRazorTodoService service)
         {
             this.service = service;
         }
@@ -29,7 +29,7 @@ namespace RazorTodo.Web.Pages
                 date = DateTime.MinValue;
             }
             var todos = service.GetTodosByMonth(date.Value);
-            service.TurnOffProxy();
+            service.SetProxyEnabled(false);
             var jres = new JsonResult(todos);
             return jres;
         }

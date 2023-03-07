@@ -1,12 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 
 #nullable disable
 
 namespace RazorTodo.DAL
 {
-    public partial class RazorTodoContext : DbContext
+    public partial class RazorTodoContext : DbContext, IDbContext
     {
         public RazorTodoContext()
         {
@@ -55,5 +57,10 @@ namespace RazorTodo.DAL
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public void SetProxyEnabled(bool isEnabled)
+        {
+            this.ChangeTracker.LazyLoadingEnabled = isEnabled;
+        }
     }
 }

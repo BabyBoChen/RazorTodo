@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace RazorTodo.DAL
+namespace RazorTodo.Abstraction.Models
 {
-    public partial class Todo
+    public class Todo
     {
         public long TodoId { get; set; }
         public string TodoName { get; set; }

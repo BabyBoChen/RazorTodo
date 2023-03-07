@@ -7,19 +7,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RazorTodo.DTO;
-using RazorTodo.DAL;
+using RazorTodo.Abstraction.Services;
+using RazorTodo.Abstraction.Models;
 
 namespace RazorTodo.Service
 {
-    public class CalendarService : IDisposable
+    public class CalendarService : ICalendarService
     {
-        private RazorTodoContext db = new RazorTodoContext();
+        private IDbContext db { get; set; } = ServiceContainer.GetTransient<IDbContext>();
+
         public void ImportGovernmentCalendar(string filepath)
         {
             var gcds = this.ReadCsv(filepath);
             this.SaveGovernmentCalendar(gcds);
         }
+
         public List<GovernmentCalendarDate> ReadCsv(string filepath)
         {
             List<GovernmentCalendarDate> gcds = new List<GovernmentCalendarDate>();
@@ -68,6 +70,7 @@ namespace RazorTodo.Service
             }
             return gcds;
         }
+        
         public int ChineseDayToInt(string chineseDay)
         {
             int d = 0;
@@ -102,10 +105,11 @@ namespace RazorTodo.Service
             }
             return d;
         }
+        
         public int SaveGovernmentCalendar(List<GovernmentCalendarDate> gcds)
         {
             int affectedRowCount = 0;
-            using (var db = new RazorTodoContext())
+            using (db)
             {
                 foreach (var gcd in gcds)
                 {

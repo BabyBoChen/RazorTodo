@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorTodo.DAL;
 using RazorTodo.Web.ViewModels;
-using RazorTodo.Service;
 using Microsoft.AspNetCore.Authorization;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web.Pages
 {
     [Authorize]
     public class IndexAsyncModel : PageModel
     {
-        private RazorTodoService service;
-        public IndexAsyncModel(RazorTodoService service)
+        private IRazorTodoService service;
+        public IndexAsyncModel(IRazorTodoService service)
         {
             this.service = service;
         }

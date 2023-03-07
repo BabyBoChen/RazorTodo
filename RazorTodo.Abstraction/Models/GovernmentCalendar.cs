@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace RazorTodo.DAL
+namespace RazorTodo.Abstraction.Models
 {
-    public partial class GovernmentCalendar
+    public class GovernmentCalendar
     {
         public long GovernmentCalendarId { get; set; }
         public string DateString { get; set; }

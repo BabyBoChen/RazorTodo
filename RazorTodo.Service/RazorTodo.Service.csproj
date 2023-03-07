@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RazorTodo.Abstraction\RazorTodo.Abstraction.csproj" />
     <ProjectReference Include="..\RazorTodo.DAL\RazorTodo.DAL.csproj" />
-    <ProjectReference Include="..\RazorTodo.DTO\RazorTodo.DTO.csproj" />
   </ItemGroup>
 
 </Project>

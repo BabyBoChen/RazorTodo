@@ -1,16 +1,18 @@
 ﻿@page
 @model RazorTodo.Web.Pages.CalendarModel
 @section Styles{
-    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/bbljCalendar.css" asp-append-version="true">
 }
 
-<h1 id="pageTitle">BBLJ行事曆📅</h1>
+<h1 class="page-title">
+    BBLJ行事曆📅
+</h1>
 <div class="dial-wrapper">
     <label for="selYearDial">
         <select id="selYearDial" name="Year" onchange="dial()">
             <option id="opt1" value="1">1</option>
             <option id="opt2" value="2">2</option>
-            <option id="opt3" value="3" selected>3</option>
+            <option id="opt3" value="3">3</option>
             <option id="opt4" value="4">4</option>
             <option id="opt5" value="5">5</option>
         </select>
@@ -34,31 +36,11 @@
         月
     </label>
 </div>
-<script>
-    let now = new Date()
-    let utcNow = new Date(now.getFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0);
-    document.querySelector("#opt3").value = utcNow.getFullYear();
-    document.querySelector("#opt3").innerHTML = utcNow.getFullYear();
-    document.querySelector("#opt2").value = utcNow.getFullYear() - 1;
-    document.querySelector("#opt2").innerHTML = utcNow.getFullYear() - 1;
-    document.querySelector("#opt1").value = utcNow.getFullYear() - 2;
-    document.querySelector("#opt1").innerHTML = utcNow.getFullYear() - 2;
-    document.querySelector("#opt4").value = utcNow.getFullYear() + 1;
-    document.querySelector("#opt4").innerHTML = utcNow.getFullYear() + 1;
-    document.querySelector("#opt5").value = utcNow.getFullYear() + 2;
-    document.querySelector("#opt5").innerHTML = utcNow.getFullYear() + 2;
-    let optMonths = document.querySelectorAll("#selMonthDial option");
-    optMonths.forEach(/** @@param {HTMLOptionElement} opt*/ function (opt) {
-        if (utcNow.getMonth() + 1 == opt.value) {
-            opt.selected = true;
-        }
-    });
-</script>
 <div class="calendar-wrapper">
     <canvas id="calendar"></canvas>
 </div>
 <div class="btn-wrapper">
-    <a class="mdc-button mdc-button--raised" href="/#!/1">
+    <a class="mdc-button mdc-button--outlined" href="/#!/1">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__focus-ring"></span>
         <span class="mdc-button__label">回首頁</span>
@@ -66,71 +48,120 @@
 </div>
 
 @section Scripts{
-    <script type="text/javascript" charset="UTF-8" src="~/js/calendar.js" asp-append-version="true"></script>
+    <script type="text/javascript" charset="UTF-8" src="~/js/bbljCalendar-1.0.1.js" asp-append-version="true"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', async function () {
-            calendar.calendarDayInfos = await fetchCalendars(now.getFullYear(), now.getUTCMonth() + 1);
-        });
-        function convertRemToPixels(rem) {
-            return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-        }
-        async function fetchCalendars(y, m) {
-            let calendarDays = await fetch(`/apiCalendar?y=${y}&m=${m}`, {
-                method: 'GET',
-            }).then(function (prop) {
-                return prop.json();
-            }).then(function (days) {
-                let calendarDayInfos = [];
-                days.forEach(function (day) {
-                    let d = new Date(day.Year, day.Month - 1, day.Date, 0, 0, 0);
-                    let cd = new CalendarDay(d, day.IsHoliday, day.Description);
-                    calendarDayInfos.push(cd);
-                });
-                return calendarDayInfos;
-            });
-            return calendarDays;
-        }
-        async function dial() {
-            let y = parseInt(document.querySelector("#selYearDial").value);
-            let m = parseInt(document.querySelector("#selMonthDial").value);
-            calendar.setYearAndMonth(y, m - 1);
-            calendar.calendarDayInfos = await fetchCalendars(y, m);
+        /** @@type {BBLJCalendar} */
+        let calendar = null;
+        const apiEndPoint = "/apiCalendar";
+
+        window.addEventListener("DOMContentLoaded", onLoaded);
+
+        async function onLoaded() {
+            initDial();
+            let canvas = document.getElementById("calendar");
+            let y = Number(document.getElementById("selYearDial").value);
+            let m = Number(document.getElementById("selMonthDial").value);
+            let config = new BBLJCalendarConfig();
+            config.year = y;
+            config.month = m;
+            try {
+                config.dateInfos = await getCalendarDateInfos(y, m);
+            } catch (e) {
+                config.dateInfos = null;
+            }
+            config.onDateClicked = function (dateInfo) {
+                if (dateInfo) {
+                    /** @@type {Date} */
+                    let clickedDate = dateInfo.date
+                    location.href = `DateDetail?y=${clickedDate.getFullYear()}&m=${clickedDate.getMonth() + 1}&d=${clickedDate.getDate()}`;
+                }
+            }
+            calendar = BBLJCalendar.mount(canvas, config);
         }
 
-        let w = window.innerWidth * 0.8;
-        let h = window.innerHeight * 0.8;
-        let size = 0;
-        if (w > h) {
-            size = h;
-        } else {
-            size = w;
-        }
-        const calendar = BBLJCalendar.init("calendar", size, size);
-        calendar.fontSize = convertRemToPixels(1.25);
-        calendar.onCalendarClick = function (day) {
-            /** @@type {Date} */
-            let clickedDate = day;
-            location.href = `DateDetail?y=${clickedDate.getFullYear()}&m=${clickedDate.getMonth()+1}&d=${clickedDate.getDate()}`;
-            //calendar.calendarDayInfos.forEach(function (dayInfo) {
-            //    if (dayInfo.date.getFullYear() == clickedDate.getFullYear() &&
-            //        dayInfo.date.getMonth() == clickedDate.getMonth() &&
-            //        dayInfo.date.getDate() == clickedDate.getDate()) {
-            //        alert(`${dayInfo.date.getMonth() + 1}/${dayInfo.date.getDate()} ${dayInfo.description}`);
-            //    }
-            //});
-        };
-        window.addEventListener('resize', function () {
-            w = window.innerWidth * 0.8;
-            h = window.innerHeight * 0.8;
-            let newDimension = new Dimension(0, 0);
-            if (w > h) {
-                newDimension.w = h;
-                newDimension.h = h;
-            } else {
-                newDimension.w = w;
-                newDimension.h = w;
+        function initDial() {
+            let now = new Date();
+            let optYears = document.querySelectorAll("#selYearDial *");
+            for (let i = 0; i < optYears.length; i++) {
+                /** @@type {HTMLOptionElement} */
+                let opt = optYears[i];
+                opt.value = now.getFullYear() - 2 + i;
+                opt.innerHTML = now.getFullYear() - 2 + i;
             }
-            calendar.size = newDimension;
-        });
+            let y_m = getYMfromStorage();
+            document.getElementById("selYearDial").value = `${y_m.y}`;
+            document.getElementById("selMonthDial").value = `${y_m.m}`;
+        }
+
+        function getYMfromStorage() {
+            let y_m = {
+                y: localStorage.getItem('calendarY'),
+                m: localStorage.getItem('calendarM'),
+            };
+            let now = new Date();
+            if (Number(y_m.y) != NaN) {
+                if (Number(y_m.y) >= now.getFullYear() - 2 && Number(y_m.y) <= now.getFullYear() + 2) {
+                    y_m.y = `${Number(y_m.y)}`;
+                } else {
+                    y_m.y = `${now.getFullYear()}`;
+                }
+            } else {
+                y_m.y = `${now.getFullYear()}`;
+            }
+            if (Number(y_m.m) != NaN) {
+                if (Number(y_m.m) >= 1 && Number(y_m.m) <= 12) {
+                    y_m.m = `${Number(y_m.m)}`;
+                } else {
+                    y_m.m = `${now.getMonth() + 1}`;
+                }
+            } else {
+                y_m.m = `${now.getMonth() + 1}`;
+            }
+            return y_m;
+        }
+
+        async function dial() {
+            let y = Number(document.getElementById("selYearDial").value);
+            let m = Number(document.getElementById("selMonthDial").value);
+            calendar.config.year = y;
+            calendar.config.month = m;
+            setYMToStorage({
+                y:y,
+                m:m,
+            });
+            try {
+                calendar.config.dateInfos = await getCalendarDateInfos(y, m);
+            } catch (e) {
+                calendar.config.dateInfos = null;
+            }
+            calendar.updateCalendar();
+        }
+
+        function setYMToStorage(y_m){
+            localStorage.setItem('calendarY', y_m.y);
+            localStorage.setItem('calendarM', y_m.m);
+        }
+
+        /** @@param y {number} @@param m {number} @@returns {[BBLJCalendarDateInfo]}*/
+        async function getCalendarDateInfos(y, m) {
+            let dateInfos = [];
+            await fetch(`${apiEndPoint}?y=${y}&m=${m}`, {
+                method: "GET"
+            }).then(function (res) {
+                return res.json();
+            }).then(function (gcs) {
+                if (Array.isArray(gcs)) {
+                    for (let i = 0; i < gcs.length; i++) {
+                        let dateInfo = new BBLJCalendarDateInfo();
+                        dateInfo.date = new Date(gcs[i]["DateString"]);
+                        dateInfo.description = gcs[i]["Description"];
+                        dateInfo.isHoliday = gcs[i]["IsHoliday"] == 1;
+                        dateInfos.push(dateInfo);
+                    }
+                }
+            });
+            return dateInfos;
+        }
+        
     </script>
 }

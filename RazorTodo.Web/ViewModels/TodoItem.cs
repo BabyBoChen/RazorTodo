@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RazorTodo.DAL;
+using RazorTodo.Abstraction.Models;
 
 namespace RazorTodo.Web.ViewModels
 {

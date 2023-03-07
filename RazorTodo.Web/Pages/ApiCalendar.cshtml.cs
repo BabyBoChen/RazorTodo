@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorTodo.Service;
+using RazorTodo.Abstraction.Services;
 
 namespace RazorTodo.Web.Pages
 {
     public class ApiCalendarModel : ApiPageModel
     {
-        private CalendarService service;
-        public ApiCalendarModel(CalendarService service)
+        private ICalendarService service;
+        public ApiCalendarModel(ICalendarService service)
         {
             this.service = service;
         }
