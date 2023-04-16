@@ -217,6 +217,38 @@ else
                 @* <textarea class="form-control" id='description' name="Description">@todo["Description"]</textarea> *@
             </div>
         </div>
+
+        @if (mode == Mode.Edit)
+        {
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-2-desktop
+                mdc-layout-grid__cell--span-1-tablet
+                mdc-layout-grid__cell--span-0-phone">
+                </div>
+                <div class="mdc-layout-grid__cell--span-2-desktop
+                mdc-layout-grid__cell--span-2-tablet
+                mdc-layout-grid__cell--span-1-phone">
+                    <div class="form-label">
+                        <label for='description'>相簿：</label>
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell--span-6-desktop
+                mdc-layout-grid__cell--span-4-tablet
+                mdc-layout-grid__cell--span-3-phone">
+                    <div class="mdc-touch-target-wrapper">
+                        <button type="button"
+                                class="mdc-button mdc-button--outlined"
+                                id="btnAlbum"
+                                onclick="openAlbum(@todo.TodoId)">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="mdc-button__focus-ring"></span>
+                            <span class="mdc-button__label">開啟相簿📷</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell--span-2-desktop
                 mdc-layout-grid__cell--span-1-tablet
@@ -254,6 +286,7 @@ else
                 </div>
             </div>
         </div>
+
         <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell--span-3-desktop
                 mdc-layout-grid__cell--span-2-tablet

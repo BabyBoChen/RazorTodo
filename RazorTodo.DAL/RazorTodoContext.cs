@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using RazorTodo.Abstraction.Models;
@@ -20,6 +21,8 @@ namespace RazorTodo.DAL
         }
 
         public virtual DbSet<GovernmentCalendar> GovernmentCalendars { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
+        public virtual DbSet<TblUid> TblUids { get; set; }
         public virtual DbSet<Todo> Todos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,6 +39,27 @@ namespace RazorTodo.DAL
             modelBuilder.Entity<GovernmentCalendar>(entity =>
             {
                 entity.ToTable("GovernmentCalendar");
+            });
+
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity.ToTable("Photo");
+
+                entity.Property(e => e.FileId).IsRequired();
+
+                entity.Property(e => e.Uid).IsRequired();
+
+                entity.HasOne(d => d.Todo)
+                    .WithMany(p => p.Photos)
+                    .HasForeignKey(d => d.TodoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
+            modelBuilder.Entity<TblUid>(entity =>
+            {
+                entity.HasKey(e => e.Uid);
+
+                entity.ToTable("TblUid");
             });
 
             modelBuilder.Entity<Todo>(entity =>

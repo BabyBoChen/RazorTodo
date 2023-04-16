@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace RazorTodo.Abstraction.Models
 {
-    public class Todo
+    public partial class Todo
     {
+        public Todo()
+        {
+            Photos = new HashSet<Photo>();
+        }
+
         public long TodoId { get; set; }
         public string TodoName { get; set; }
         public long IsDone { get; set; }
@@ -15,5 +20,7 @@ namespace RazorTodo.Abstraction.Models
         public string Description { get; set; }
         public long? LineOrder { get; set; }
         public string EstDate { get; set; }
+
+        public virtual ICollection<Photo> Photos { get; set; }
     }
 }

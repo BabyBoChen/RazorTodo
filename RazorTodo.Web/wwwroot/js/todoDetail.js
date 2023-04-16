@@ -17,6 +17,10 @@ function isDoneChange(e){
     }
 }
 
+function openAlbum(todoId) {
+    window.open("Album?id="+todoId);
+}
+
 /**
  * @param {HTMLButtonElement} btnSave
  */
@@ -32,6 +36,7 @@ function cancel(){
     let returnPage = document.getElementById("returnPage").value;
     window.location.href = `/#!/${returnPage}`;
 }
+
 window.addEventListener("load",function(){
     let alertType = document.getElementById("alertType").innerHTML;
     if(alertType == "1"){

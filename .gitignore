@@ -368,4 +368,4 @@ RazorTodo.Test/RazorTodo.db
 
 # DbPassword
 DbPassword.cs
-/RazorTodo.Web/Secrets/bblj-firebase.json
+bblj-firebase.json
