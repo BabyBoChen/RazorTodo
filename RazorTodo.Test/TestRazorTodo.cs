@@ -42,7 +42,9 @@ namespace RazorTodo.Test
         {
             using (var service = new GoogleDriveService())
             {
-                service.ListAllFiles("83", "83_1");
+                service.DeleteAll();
+                //service.CreateFolder("xxx", "82", "test");
+                //service.CreateFolder("xxx", "82", "test");
             }
         }
     }
