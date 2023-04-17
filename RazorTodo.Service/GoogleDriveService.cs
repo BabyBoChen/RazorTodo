@@ -2,6 +2,7 @@
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
+using RazorTodo.Abstraction.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,11 +45,8 @@ namespace RazorTodo.Service
             for (int i = 0; i < parentFolderPaths.Length; i++)
             {
                 paths.Add(parentFolderPaths[i]);
-                try
-                {
-                    currentFolder = this.GetFolder(paths.ToArray());
-                }
-                catch (FolderNotFoundException)
+                currentFolder = this.GetFolder(paths.ToArray());
+                if(currentFolder == null)
                 {
                     this.CreateFolder(parentFolderPaths[i], paths.Take(i).ToArray());
                     currentFolder = this.GetFolder(paths.ToArray());
@@ -79,33 +77,58 @@ namespace RazorTodo.Service
             var req = this._Service.Files.List();
             req.Q = "name = 'RazorTodo' and mimeType = 'application/vnd.google-apps.folder'";
             Google.Apis.Drive.v3.Data.File currentFolder = req.Execute().Files.FirstOrDefault();  //root folder
-            string currentPath = "/";
+            //string currentPath = "/";
             if (fullPaths == null || fullPaths.Length > 0)
             {
                 req = this._Service.Files.List();
                 for (int i = 0; i < fullPaths.Length; i++)
                 {
-                    currentPath += fullPaths[i] + "/";
+                    //currentPath += fullPaths[i] + "/";
                     req.Q = $" '{currentFolder.Id}' in parents and name = '{fullPaths[i]}' and mimeType = 'application/vnd.google-apps.folder'";
                     currentFolder = req.Execute().Files.FirstOrDefault();
-                    if (currentFolder == null)
-                    {
-                        throw new FolderNotFoundException(currentPath);
-                    }
                 }
             }
             return currentFolder;
         }
 
-        private class FolderNotFoundException : Exception
-        {
-            public string FolderPath { get; private set; }
-            public override string Message { get { return $"Folder \"{FolderPath}\" not found"; } }
-            public FolderNotFoundException(string fullPath)
-            {
-                this.FolderPath = fullPath;
-            }
-        }
+        //private class FolderNotFoundException : Exception
+        //{
+        //    public string FolderPath { get; private set; }
+        //    public override string Message { get { return $"Folder \"{FolderPath}\" not found"; } }
+        //    public FolderNotFoundException(string fullPath)
+        //    {
+        //        this.FolderPath = fullPath;
+        //    }
+        //}
+
+        //public string Upload(string filename, FileStream fs, params string[] parentFolderPaths)
+        //{
+        //    string fileId = "";
+        //    Google.Apis.Drive.v3.Data.File parentFolder = this.GetFolder(parentFolderPaths);
+        //    if (parentFolder == null)
+        //    {
+        //        this.CreateFolder(parentFolderPaths.Last(), parentFolderPaths.Take(parentFolderPaths.Length - 1).ToArray());
+        //        parentFolder = this.GetFolder(parentFolderPaths);
+        //    }
+        //    var file = this.GetFile(filename, parentFolderPaths);
+        //    if(file == null)  //create & upload
+        //    {
+        //        var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+        //        {
+        //            Name = filename,
+        //            Parents = new List<string> { parentFolder.Id },
+        //        };
+        //        FilesResource.CreateMediaUpload request;
+        //        request = this._Service.Files.Create(fileMetadata, fs, GoogleDriveContentType.GetContentTypeFromFileExtension((new FileInfo(filename)).Extension));
+        //        request.Fields = "id";
+        //        request.Upload();
+                
+        //    }
+        //    else //update
+        //    {
+
+        //    }            
+        //}
 
         private Google.Apis.Drive.v3.Data.File GetFile(string filename, params string[] parentFolderPaths)
         {
@@ -115,26 +138,6 @@ namespace RazorTodo.Service
             var file = req.Execute().Files.FirstOrDefault();
             return file;
         }
-
-        //public string Upload(string filename, FileStream fs, params string[] parentFolderPaths)
-        //{
-        //    Google.Apis.Drive.v3.Data.File parentFolder = this.GetFolder(parentFolderPaths);
-        //    if()
-        //    {
-
-        //    }
-
-
-        //    var fileMetadata = new Google.Apis.Drive.v3.Data.File()
-        //    {
-        //        Name = filename,
-        //        Parents = new List<string> { parentFolder.Id },
-        //    };
-        //    FilesResource.CreateMediaUpload request;
-        //    request = this._Service.Files.Create(fileMetadata, fs, "image/jpeg");
-        //    request.Fields = "id";
-        //    request.Upload();
-        //}
 
         public IList<Google.Apis.Drive.v3.Data.File> ListAllFiles(params string[] paths)
         {
