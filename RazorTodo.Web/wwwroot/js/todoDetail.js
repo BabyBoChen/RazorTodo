@@ -18,7 +18,7 @@ function isDoneChange(e){
 }
 
 function openAlbum(todoId) {
-    window.open("Album?id="+todoId);
+    window.open(`Album?id=${todoId}`);
 }
 
 /**

@@ -1,7 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RazorTodo.DAL;
 using RazorTodo.Service;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace RazorTodo.Test
 {
@@ -40,11 +42,11 @@ namespace RazorTodo.Test
         [TestMethod]
         public void TestGoogleDriveService()
         {
-            using (var service = new GoogleDriveService())
+            string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            string secret = Path.Combine(cwd, "Secrets", "bblj-firebase.json");
+            using (var service = new GoogleDriveService(secret, "RazorTodo"))
             {
-                service.DeleteAll();
-                //service.CreateFolder("xxx", "82", "test");
-                //service.CreateFolder("xxx", "82", "test");
+                string link = service.GetSharedLink("83", "test", "test.jpeg");
             }
         }
     }
