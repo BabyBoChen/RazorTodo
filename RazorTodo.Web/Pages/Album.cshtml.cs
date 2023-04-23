@@ -11,7 +11,6 @@ using System.Linq;
 namespace RazorTodo.Web.Pages
 {
     [Authorize]
-    [IgnoreAntiforgeryToken(Order = 1001)]
     public class AlbumModel : PageModel
     {
         private IRazorTodoService service;
@@ -79,31 +78,58 @@ namespace RazorTodo.Web.Pages
     
         public IActionResult OnPost()
         {
+            IActionResult err = null;
+
             string id = Request.Form["TodoId"];
             int todoId = 0;
-            if (int.TryParse(id, out todoId))
+            if (!int.TryParse(id, out todoId))
+            {
+                err = NotFound();
+            }
+            if(err == null)
             {
                 this.Todo = service.GetTodoByTodoId(todoId);
-                if (this.Todo != null)
+                if (this.Todo == null)
                 {
-                    var photos = Request.Form.Files;
-                    for (int i = 0; i < photos.Count; i++)
+                    err = NotFound();
+                }
+            }
+            int photoCnt = Request.Form.Files.Count;
+            long totalSize = 0;
+            if(err == null)
+            {
+                var photos = Request.Form.Files;
+                for (int i = 0; i < photos.Count; i++)
+                {
+                    totalSize += photos[i].Length;
+                }
+                if(photoCnt > 5)
+                {
+                    err = BadRequest("單次最多上傳5張照片!");
+                }
+                if(totalSize > 10485760)
+                {
+                    err = BadRequest("單次上傳照片不可超過10MB!");
+                }
+            }
+            if(err == null)
+            {
+                var photos = Request.Form.Files;
+                for (int i = 0; i < photos.Count; i++)
+                {
+                    using (var s = photos[i].OpenReadStream())
                     {
-                        using (var s = photos[i].OpenReadStream())
-                        {
-                            this.drive.UploadFile(photos[i].FileName, s, $"{this.Todo.TodoId}");
-                        }
+                        this.drive.UploadFile(photos[i].FileName, s, $"{this.Todo.TodoId}");
                     }
-                    return RedirectToAction(nameof(OnGet), new { id = this.Todo.TodoId, p = Request.Form["PageNumber"].ToString() });
                 }
-                else
-                {
-                    return NotFound();
-                }
+            }
+            if(err == null)
+            {
+                return RedirectToAction(nameof(OnGet), new { id = this.Todo.TodoId, p = Request.Form["PageNumber"].ToString() });
             }
             else
             {
-                return NotFound();
+                return err;
             }
         }
     }
