@@ -15,5 +15,6 @@ namespace RazorTodo.Abstraction.Services
         List<Todo> GetTodosByMonth(DateTime date);
         int SaveChanges();
         void SetProxyEnabled(bool isEnabled);
+        string GetUid(string prefix = null, string suffix = null);
     }
 }

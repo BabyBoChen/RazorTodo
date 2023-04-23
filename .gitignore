@@ -368,4 +368,11 @@ RazorTodo.Test/RazorTodo.db
 
 # DbPassword
 DbPassword.cs
+
+#Tokens
 bblj-firebase.json
+RazorTodoDropboxRefreshToken.json
+RazorTodo.Test/Secrets
+
+
+

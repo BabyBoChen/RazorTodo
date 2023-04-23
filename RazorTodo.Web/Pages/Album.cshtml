@@ -18,47 +18,164 @@
             left:0px;
             right:0px;
             bottom:0px;
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .photo-wrapper-inner:hover{
+            background-color: rgba(102, 102, 102, 0.3);
+        }
+
+        .todo-photo-title{
+            height: 1.5em;
+            white-space: nowrap;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        .todo-photo{
+            width:100%;
+            height:calc(100% - 1.6em);
+            object-fit:contain;
         }
     </style>
 }
+
+<div id="viewbag" hidden>
+    <form id="frmUpload" method="post" enctype="multipart/form-data" style="display:none;">
+        <input type="hidden" id="todoId" name="TodoId" value="@Model.Todo.TodoId" />
+        <input type="hidden" id="pageNumber" name="PageNumber" value="@Model.PageNumber" />
+        <input id="fileDialog" name="photos" type="file" multiple style="display:none;" onchange="upload(this.files)" />
+    </form>
+</div>
 
 <h1 id="pageTitle">相簿</h1>
 <div class="mdc-layout-grid">
 
     <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell--span-2-desktop
-            mdc-layout-grid__cell--span-1-tablet
-            mdc-layout-grid__cell--span-0-phone">
+        <div class="mdc-layout-grid__cell--span-6-desktop
+            mdc-layout-grid__cell--span-4-tablet
+            mdc-layout-grid__cell--span-2-phone">
+            <button class="mdc-button mdc-button--outlined" onclick="previousPage()">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">上一頁</span>
+            </button>
+            <label> @Model.PageNumber / @Model.TotalPage</label>
+            <button class="mdc-button mdc-button--outlined" onclick="nextPage()">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">下一頁</span>
+            </button>
         </div>
-        <div class="mdc-layout-grid__cell--span-8-desktop
-            mdc-layout-grid__cell--span-6-tablet
-            mdc-layout-grid__cell--span-4-phone">
-            <button class="mdc-button mdc-button--raised" onclick="">
+
+        <div class="mdc-layout-grid__cell--span-6-desktop
+            mdc-layout-grid__cell--span-4-tablet
+            mdc-layout-grid__cell--span-2-phone"
+            style="text-align:right;">
+            <button class="mdc-button mdc-button--raised" onclick="showDialog()">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__focus-ring"></span>
                 <span class="mdc-button__label">上傳</span>
             </button>
-            <label style="margin-left:10px;">共: @(Model.Photos?.Count) 張 </label>
-        </div>        
+            <button class="mdc-button mdc-button--raised" onclick="">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__focus-ring"></span>
+                <span class="mdc-button__label">刪除</span>
+            </button>
+        </div>
+
     </div>
 
     <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell--span-3-desktop
-            mdc-layout-grid__cell--span-4-tablet
-            mdc-layout-grid__cell--span-4-phone">
-            <div class="photo-wrapper-outer" style="background-color:red;">
-                <div class="photo-wrapper-inner" style="background-color:green;">
-                    
+        @for(int i = 0; i < Model.Photos.Count; i++)
+        {
+            <div class="mdc-layout-grid__cell--span-3-desktop
+                mdc-layout-grid__cell--span-4-tablet
+                mdc-layout-grid__cell--span-4-phone">
+                <div class="photo-wrapper-outer">
+                    <div class="photo-wrapper-inner">
+                        <div class="todo-photo-title">
+                            <div class="mdc-touch-target-wrapper">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox"
+                                           class="mdc-checkbox__native-control"
+                                           id="ckPhoto_@(i)"
+                                           value="@Model.Photos[i].FileId" />
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark"
+                                             viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path"
+                                                  fill="none"
+                                                  d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                    <div class="mdc-checkbox__ripple"></div>
+                                </div>
+                                <label for="ckPhoto_@(i)">@Model.Photos[i].Filename</label>
+                            </div>
+                        </div>
+                        <img class="todo-photo" src="@Model.Photos[i].SharedLink" onclick="window.open('@Model.Photos[i].SharedLink');" />
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
 @section Scripts
 {
     <script>
-        
+        window.addEventListener("DOMContentLoaded", function(){
+            let checkboxs = document.querySelectorAll('.mdc-checkbox');
+            checkboxs.forEach(function(ck, i){
+                mdc.checkbox.MDCCheckbox.attachTo(ck);
+            });
+        });
+        function previousPage(){
+            let todoId = document.getElementById("todoId").value;
+            let pageNumber = document.getElementById("pageNumber").value;
+            pageNumber = Number(pageNumber);
+            if(pageNumber) {
+                pageNumber -= 1;
+            }
+            window.location.href = `Album?id=${todoId}&p=${pageNumber}`;
+        }
+        function nextPage() {
+            let todoId = document.getElementById("todoId").value;
+            let pageNumber = document.getElementById("pageNumber").value;
+            pageNumber = Number(pageNumber);
+            if (pageNumber) {
+                pageNumber += 1;
+            }
+            window.location.href = `Album?id=${todoId}&p=${pageNumber}`;
+        }
+        function showDialog() {
+            let fileDialog = document.getElementById("fileDialog");
+            fileDialog.click();
+        }
+        function upload(files){
+            console.log(files);
+            if(files.length > 5) {
+                alert("單次最多上傳5張照片!");
+                document.getElementById("fileDialog").value = "";
+            } else {
+                let totalSize = 0;
+                for (let i = 0; i < files.length; i++ ) {
+                    totalSize += files[i].size;
+                }
+                if (totalSize > 10485760) {
+                    alert("單次上傳照片不可超過10MB!");
+                    document.getElementById("fileDialog").value = "";
+                } else {
+                    if (files.length > 0) {
+                        let form = document.getElementById("frmUpload");
+                        form.submit();
+                    }
+                }
+            }
+        }
     </script>
 }
 

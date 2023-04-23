@@ -12,6 +12,8 @@ using RazorTodo.DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RazorTodo.Service;
 using RazorTodo.Abstraction.Services;
+using System.Reflection;
+using System.IO;
 
 namespace RazorTodo.Web
 {
@@ -36,6 +38,10 @@ namespace RazorTodo.Web
             });
             services.AddScoped<IRazorTodoService, RazorTodoService>();
             services.AddScoped<ICalendarService, CalendarService>();
+            string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            string tokenPath = Path.Combine(cwd, "Secrets", "RazorTodoDropboxRefreshToken.json");
+            DropboxService.Register(tokenPath, "RazorTodo");
+            services.AddScoped<ICloudDriveService, DropboxService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>

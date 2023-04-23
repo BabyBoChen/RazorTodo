@@ -4,6 +4,7 @@ using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Newtonsoft.Json;
 using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,37 +16,85 @@ using System.Threading.Tasks;
 
 namespace RazorTodo.Service
 {
-    public class GoogleDriveService : IDisposable
+    public class GoogleDriveService : ICloudDriveService
     {
+        private static string _TokenPath { get; set; }
+        private static string _RootFolderName { get; set; }
+        private static bool _IsRegister = false;
+        public static void Register(string tokenPath, string rootFolderName)
+        {
+            _TokenPath = tokenPath;
+            _RootFolderName = rootFolderName;
+            _IsRegister = true;
+        }
+        
         private DriveService _Service { get; set; }
         private string _ClientEmail { get; set; }
-        public string RootFolderName { get; set; }
+        public string RootFolderName { get; private set; }
 
-        public GoogleDriveService(string tokenPath, string rootFolderName)
+        public GoogleDriveService()
         {
-            string tokenJson = System.IO.File.ReadAllText(tokenPath);
-            var token = JsonConvert.DeserializeObject<GoogleDriveApiToken>(tokenJson);
-            this._ClientEmail = token.ClientEmail;
-            using (var stream = new FileStream(tokenPath, FileMode.Open, FileAccess.Read))
+            if(_IsRegister)
             {
-                var credentials = GoogleCredential.FromStream(stream);
-                if (credentials.IsCreateScopedRequired)
+                string tokenJson = System.IO.File.ReadAllText(_TokenPath);
+                var token = JsonConvert.DeserializeObject<GoogleDriveApiToken>(tokenJson);
+                this._ClientEmail = token.ClientEmail;
+                using (var stream = new FileStream(_TokenPath, FileMode.Open, FileAccess.Read))
                 {
-                    credentials = credentials.CreateScoped(new string[] { DriveService.Scope.Drive });
-                }
+                    var credentials = GoogleCredential.FromStream(stream);
+                    if (credentials.IsCreateScopedRequired)
+                    {
+                        credentials = credentials.CreateScoped(new string[] { DriveService.Scope.Drive });
+                    }
 
-                this._Service = new DriveService(new BaseClientService.Initializer()
-                {
-                    HttpClientInitializer = credentials,
-                    ApplicationName = "RazorTodo",
-                });
+                    this._Service = new DriveService(new BaseClientService.Initializer()
+                    {
+                        HttpClientInitializer = credentials,
+                        ApplicationName = "RazorTodo",
+                    });
+                }
+                this.RootFolderName = _RootFolderName;
             }
-            this.RootFolderName = rootFolderName;
+            else
+            {
+                throw new Exception("This service has not been registered yet. Please invoke GoogleDriveService.Register before instantiating this service.");
+            }
         }
 
         public class GoogleDriveApiToken 
         {
             public string ClientEmail { get; set; }
+        }
+
+        public List<CloudDriveEntry> GetFilesInFolder(params string[] folderPaths)
+        {
+            List<CloudDriveEntry> files = new List<CloudDriveEntry>();
+            var folder = this.GetFolder(folderPaths);
+            if(folder != null)
+            {
+                var metas = this.ListAllFiles(folderPaths);
+                for(int i = 0; i < metas.Count; i++)
+                {
+                    var meta = metas[i];
+                    if(meta.MimeType != "application/vnd.google-apps.folder")
+                    {
+                        var f = new CloudDriveFile();
+                        f.FileId = meta.Id;
+                        f.Filename = meta.Name;
+                        f.SharedLink = this.GetSharedLinkById(f.FileId);
+                        files.Add(f);
+                    }
+                    else if(meta.MimeType == "application/vnd.google-apps.folder")
+                    {
+                        var f = new CloudDriveFolder();
+                        f.FileId = meta.Id;
+                        f.FolderName = meta.Name;
+                        f.SharedLink = null;
+                        files.Add(f);
+                    }
+                }
+            }
+            return files;
         }
 
         public string CreateFolder(string folderName, params string[] parentFolderPaths)
@@ -105,7 +154,7 @@ namespace RazorTodo.Service
             return currentFolder;
         }
 
-        public string Upload(string filename, FileStream fs, params string[] parentFolderPaths)
+        public string UploadFile(string filename, Stream s, params string[] parentFolderPaths)
         {
             string fileId = "";
             Google.Apis.Drive.v3.Data.File parentFolder = this.GetFolder(parentFolderPaths);
@@ -123,7 +172,7 @@ namespace RazorTodo.Service
                     Name = filename,
                     Parents = new List<string> { parentFolder.Id },
                 };
-                var request = this._Service.Files.Create(fileMetadata, fs, contentType);
+                var request = this._Service.Files.Create(fileMetadata, s, contentType);
                 request.Fields = "*";
                 request.Upload();
                 fileId = request.ResponseBody?.Id;
@@ -134,7 +183,7 @@ namespace RazorTodo.Service
                 {
                     Name = filename,
                 };
-                var request = this._Service.Files.Update(fileMetadata, file.Id, fs, contentType);
+                var request = this._Service.Files.Update(fileMetadata, file.Id, s, contentType);
                 request.Fields = "*";
                 request.Upload();
                 fileId = request.ResponseBody?.Id;
@@ -145,7 +194,7 @@ namespace RazorTodo.Service
         private Google.Apis.Drive.v3.Data.File GetFileFromFolder(string filename, Google.Apis.Drive.v3.Data.File parentFolder)
         {
             var req = this._Service.Files.List();
-            req.Q = $"'{parentFolder.Id}' in parents and name = '{filename}'";
+            req.Q = $"'{parentFolder.Id}' in parents and name = '{filename}' and mimeType != 'application/vnd.google-apps.folder'";
             var file = req.Execute().Files.FirstOrDefault();
             return file;
         }
@@ -221,6 +270,30 @@ namespace RazorTodo.Service
             return link;
         }
 
+        public void DeleteFile(params string[] fullPaths)
+        {
+            if (fullPaths != null && fullPaths.Length > 0)
+            {
+                var parentFolder = this.GetFolder(fullPaths.Take(fullPaths.Length - 1).ToArray());
+                if (parentFolder != null)
+                {
+                    var file = this.GetFileFromFolder(fullPaths.Last(), parentFolder);
+                    if (file != null)
+                    {
+                        this._Service.Files.Delete(file.Id);
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException(this.JoinPaths(fullPaths.Take(fullPaths.Length - 1).ToArray()) + $"/{fullPaths.Last()}");
+                    }
+                }
+                else
+                {
+                    throw new FolderNotFoundException(this.JoinPaths(fullPaths.Take(fullPaths.Length - 1).ToArray()));
+                }
+            }
+        }
+
         public void DeleteAll()
         {
             var myFiles = this.ListAllFiles().Where((f) => 
@@ -242,19 +315,19 @@ namespace RazorTodo.Service
             }
         }
 
-        private IList<Google.Apis.Drive.v3.Data.File> ListAllFiles(params string[] paths)
+        private IList<Google.Apis.Drive.v3.Data.File> ListAllFiles(params string[] folderPaths)
         {
             var req = this._Service.Files.List();
             req.Q = $"name = '{RootFolderName}' and mimeType = 'application/vnd.google-apps.folder'";
             string rootId = req.Execute().Files.FirstOrDefault()?.Id;
             req = this._Service.Files.List();
             req.Q = $" '{rootId}' in parents ";
-            if (paths != null && paths.Length > 0)
+            if (folderPaths != null && folderPaths.Length > 0)
             {
                 string folderId = rootId;
-                for (int i = 0; i < paths.Length; i++)
+                for (int i = 0; i < folderPaths.Length; i++)
                 {
-                    req.Q = $" '{folderId}' in parents and name = '{paths[i]}' ";
+                    req.Q = $" '{folderId}' in parents and name = '{folderPaths[i]}' ";
                     folderId = req.Execute().Files.FirstOrDefault()?.Id;
                 }
                 req.Q = $" '{folderId}' in parents ";

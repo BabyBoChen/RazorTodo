@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RazorTodo.Abstraction.Models;
+using RazorTodo.Abstraction.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RazorTodo.DAL
 {
-    public partial class RazorTodoContext : DbContext
+    public partial class RazorTodoContext : DbContext, IDbContext
     {
         public List<Todo> GetTodosByMonth(DateTime date)
         {
@@ -38,6 +39,18 @@ namespace RazorTodo.DAL
                 todos.Add(todo);
             }
             return todos;
+        }
+        
+        public string GetUid(string prefix = null, string suffix = null)
+        {
+            var db = new RazorTodoContext();
+            var newUid = new TblUid();
+            newUid.Prefix = prefix;
+            newUid.Suffix = suffix;
+            db.TblUids.Add(newUid);
+            db.SaveChanges();
+            db.Dispose();
+            return $"{newUid.Prefix}{newUid.Uid}{newUid.Suffix}";
         }
     }
 }
