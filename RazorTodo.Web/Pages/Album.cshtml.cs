@@ -123,13 +123,13 @@ namespace RazorTodo.Web.Pages
                     }
                 }
             }
-            if(err == null)
+            if(err != null)
             {
-                return RedirectToAction(nameof(OnGet), new { id = this.Todo.TodoId, p = Request.Form["PageNumber"].ToString() });
+                return err;
             }
             else
             {
-                return err;
+                return Redirect($"/Album?id={this.Todo.TodoId}&p={Request.Form["PageNumber"]}");
             }
         }
     }

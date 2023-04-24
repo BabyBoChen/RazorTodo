@@ -49,12 +49,14 @@
     </form>
 </div>
 
-<h1 id="pageTitle">相簿</h1>
+<h1 id="pageTitle">相簿 - @Model.Todo.TodoName</h1>
 <div class="mdc-layout-grid">
-    <div class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__inner">        
+
         <div class="mdc-layout-grid__cell--span-6-desktop
             mdc-layout-grid__cell--span-4-tablet
-            mdc-layout-grid__cell--span-2-phone">
+            mdc-layout-grid__cell--span-4-phone"
+            style="white-space:nowrap;overflow:auto">
             <button class="mdc-button mdc-button--outlined" onclick="previousPage()">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__focus-ring"></span>
@@ -70,8 +72,8 @@
 
         <div class="mdc-layout-grid__cell--span-6-desktop
             mdc-layout-grid__cell--span-4-tablet
-            mdc-layout-grid__cell--span-2-phone"
-            style="text-align:right;">
+            mdc-layout-grid__cell--span-4-phone"
+             style="text-align:right;white-space:nowrap;overflow:auto">
             <button class="mdc-button mdc-button--raised" onclick="showDialog()">
                 <span class="mdc-button__ripple"></span>
                 <span class="mdc-button__focus-ring"></span>

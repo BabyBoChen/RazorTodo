@@ -362,6 +362,11 @@ namespace RazorTodo.Service
             }).Wait();            
         }
 
+        public void ClearCache()
+        {
+            _CachedSharedLink.Clear();
+        }
+
         public void Dispose()
         {
             this.Client?.Dispose();

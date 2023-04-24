@@ -16,5 +16,6 @@ namespace RazorTodo.Abstraction.Services
         string GetSharedLink(params string[] paths);
         void DeleteFile(params string[] fullPaths);
         void DeleteAll();
+        void ClearCache();  //Clear this cached id-sharedLink key-value pairs
     }
 }

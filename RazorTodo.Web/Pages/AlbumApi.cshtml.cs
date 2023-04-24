@@ -22,8 +22,18 @@ namespace RazorTodo.Web.Pages
             this.drive = drive;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            string action = Request.Query["action"];
+            List<string> actions = new List<string>
+            {
+                "clearcache",
+            };
+            if (actions.IndexOf(action.ToLower()) == 0)
+            {
+                this.drive.ClearCache();
+            }
+            return Redirect("/");
         }
 
         public IActionResult OnPost()
@@ -48,14 +58,14 @@ namespace RazorTodo.Web.Pages
             {
                 List<string> actions = new List<string>
                 {
-                    "Delete", "Rename",
+                    "delete", "rename",
                 };
                 string action = Request.Form["Action"];
-                if (action.IndexOf(action) == 0)
+                if (action.IndexOf(action.ToLower()) == 0)
                 {
                     resp = this.Delete();
                 }
-                else if (action.IndexOf(action) == 1)
+                else if (action.IndexOf(action.ToLower()) == 1)
                 {
                     //resp = this.Rename();
                     resp = BadRequest();

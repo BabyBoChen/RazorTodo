@@ -31,6 +31,7 @@ namespace RazorTodo.Service
         private DriveService _Service { get; set; }
         private string _ClientEmail { get; set; }
         public string RootFolderName { get; private set; }
+        private static Dictionary<string, string> _CachedSharedLink { get; } = new Dictionary<string, string>();
 
         public GoogleDriveService()
         {
@@ -201,29 +202,48 @@ namespace RazorTodo.Service
 
         public string GetSharedLink(params string[] paths)
         {
-            if(paths != null && paths.Length > 0)
+            string sharedLink = null;
+            Exception err = null;
+            if (paths != null && paths.Length > 0)
             {
-                var parentFolder = this.GetFolder(paths.Take(paths.Length - 1).ToArray());
-                if (parentFolder != null)
+                string fullPath = this.JoinPaths(paths);
+                if(_CachedSharedLink.ContainsKey(fullPath))
                 {
-                    var file = this.GetFileFromFolder(paths.Last(), parentFolder);
-                    if (file != null)
-                    {
-                        return this.GetSharedLinkById(file.Id);
-                    }
-                    else
-                    {
-                        throw new FileNotFoundException(this.JoinPaths(paths.Take(paths.Length - 1).ToArray()) + $"/{paths.Last()}");
-                    }
+                    sharedLink = _CachedSharedLink[fullPath];
                 }
                 else
                 {
-                    throw new FolderNotFoundException(this.JoinPaths(paths.Take(paths.Length - 1).ToArray()));
+                    var parentFolder = this.GetFolder(paths.Take(paths.Length - 1).ToArray());
+                    if (parentFolder != null)
+                    {
+                        var file = this.GetFileFromFolder(paths.Last(), parentFolder);
+                        if (file != null)
+                        {
+                            _CachedSharedLink[fullPath] = this.GetSharedLinkById(file.Id);
+                            sharedLink = _CachedSharedLink[fullPath];
+                        }
+                        else
+                        {
+                            err = new FileNotFoundException(this.JoinPaths(paths.Take(paths.Length - 1).ToArray()) + $"/{paths.Last()}");
+                        }
+                    }
+                    else
+                    {
+                        err = new FolderNotFoundException(this.JoinPaths(paths.Take(paths.Length - 1).ToArray()));
+                    }
                 }
             }
             else
             {
-                throw new Exception("GoogleDriveService.GetSharedLink: paths can't be null or empty");
+                err = new Exception("GoogleDriveService.GetSharedLink: paths can't be null or empty");
+            }
+            if (err == null)
+            {
+                return sharedLink;
+            }
+            else
+            {
+                throw err;
             }
         }
 
@@ -335,6 +355,11 @@ namespace RazorTodo.Service
             req.Fields = "*";
             var files = req.Execute().Files;
             return files;
+        }
+
+        public void ClearCache()
+        {
+            _CachedSharedLink.Clear();
         }
 
         public void Dispose()
