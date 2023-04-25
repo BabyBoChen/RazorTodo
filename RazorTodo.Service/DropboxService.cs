@@ -334,6 +334,7 @@ namespace RazorTodo.Service
             {
                 await this.Client.Files.DeleteV2Async(fullPath);
             }).Wait();
+            _CachedSharedLink.Remove(fullPath);
         }
 
         public void DeleteAll()
@@ -359,7 +360,8 @@ namespace RazorTodo.Service
                         await this.Client.Files.DeleteV2Async(files[i].AsFolder.PathLower);
                     }
                 }
-            }).Wait();            
+            }).Wait();
+            this.ClearCache();
         }
 
         public void ClearCache()

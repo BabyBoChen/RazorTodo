@@ -301,6 +301,8 @@ namespace RazorTodo.Service
                     if (file != null)
                     {
                         this._Service.Files.Delete(file.Id);
+                        string fullPath = this.JoinPaths(fullPaths);
+                        _CachedSharedLink.Remove(fullPath);
                     }
                     else
                     {
@@ -333,6 +335,7 @@ namespace RazorTodo.Service
             {
                 var req = this._Service.Files.Delete(f.Id).Execute();
             }
+            this.ClearCache();
         }
 
         private IList<Google.Apis.Drive.v3.Data.File> ListAllFiles(params string[] folderPaths)
