@@ -61,11 +61,11 @@ namespace RazorTodo.Web.Pages
                     "delete", "rename",
                 };
                 string action = Request.Form["Action"];
-                if (action.IndexOf(action.ToLower()) == 0)
+                if (actions.IndexOf(action.ToLower()) == 0)
                 {
                     resp = this.Delete();
                 }
-                else if (action.IndexOf(action.ToLower()) == 1)
+                else if (actions.IndexOf(action.ToLower()) == 1)
                 {
                     //resp = this.Rename();
                     resp = BadRequest();
