@@ -32,7 +32,7 @@ namespace RazorTodo.Test
             CalendarService service = new CalendarService();
             using (service)
             {
-                //service.ImportGovernmentCalendar("2023.csv");
+                service.ImportGovernmentCalendar("2024.csv");
             }
         }
 
@@ -48,29 +48,29 @@ namespace RazorTodo.Test
         [TestMethod]
         public void TestGoogleDriveService()
         {
-            string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            string secret = Path.Combine(cwd, "Secrets", "bblj-firebase.json");
-            using (var service = new GoogleDriveService(secret, "RazorTodo"))
-            {
-                //string link = service.GetSharedLink("83", "test", "test.jpeg");
-            }
+            //string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            //string secret = Path.Combine(cwd, "Secrets", "bblj-firebase.json");
+            //using (var service = new GoogleDriveService(secret, "RazorTodo"))
+            //{
+            //    //string link = service.GetSharedLink("83", "test", "test.jpeg");
+            //}
         }
 
         [TestMethod]
         public void TestDropboxService()
         {
-            string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            string refreshTokenPath = Path.Combine(cwd, "Secrets", "RazorTodoDropboxRefreshToken.json");
-            string filePath = Path.Combine(cwd, "Temp", "ttttt.jpeg");
-            //20230422_225100000_1.jpeg
-            using (var service = new DropboxService(refreshTokenPath, "RazorTodo"))
-            {
-                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                {
-                    service.UploadFile("20230422_225100000_1.jpeg", fs, "84");
-                }
-                //var url = service.GetSharedLink("gggg", "yyyy", "test.jpeg");               
-            }
+            //string cwd = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            //string refreshTokenPath = Path.Combine(cwd, "Secrets", "RazorTodoDropboxRefreshToken.json");
+            //string filePath = Path.Combine(cwd, "Temp", "ttttt.jpeg");
+            ////20230422_225100000_1.jpeg
+            //using (var service = new DropboxService(refreshTokenPath, "RazorTodo"))
+            //{
+            //    using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            //    {
+            //        service.UploadFile("20230422_225100000_1.jpeg", fs, "84");
+            //    }
+            //    //var url = service.GetSharedLink("gggg", "yyyy", "test.jpeg");               
+            //}
         }
 
         [TestMethod]

@@ -32,7 +32,7 @@ namespace RazorTodo.Service
             };
             try
             {
-                using (var sr = new StreamReader(filepath))
+                using (var sr = new StreamReader(filepath, true))
                 {
                     using (var csv = new CsvReader(sr, readConfiguration))
                     {
