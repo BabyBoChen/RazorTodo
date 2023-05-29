@@ -37,9 +37,6 @@
     <None Update="2024.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RazorTodo.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Secrets\bblj-firebase.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
