@@ -152,6 +152,10 @@ namespace RazorTodo.Service
                         fileFullPaths = new string[1] { f.Filename };
                     }
                     f.SharedLink = this.GetSharedLink(fileFullPaths);
+                    if(f.SharedLink.EndsWith("dl=0"))
+                    {
+                        f.SharedLink = f.SharedLink.Substring(0, f.SharedLink.Length - 4) + "raw=1";
+                    }
                     files.Add(f);
                 }
                 else if(meta.IsFolder)
