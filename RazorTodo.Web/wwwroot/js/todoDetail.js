@@ -1,11 +1,11 @@
-const txtTodoId = mdc.textField.MDCTextField.attachTo(document.querySelector('#todoId'));
+﻿const txtTodoId = mdc.textField.MDCTextField.attachTo(document.querySelector('#todoId'));
 const txtTodoName = mdc.textField.MDCTextField.attachTo(document.querySelector('#todoName'));
 const txtCreatedDate = mdc.textField.MDCTextField.attachTo(document.querySelector('#createdDate'));
 const txtEstDate = mdc.textField.MDCTextField.attachTo(document.querySelector('#estDate'));
 const txtDescription = mdc.textField.MDCTextField.attachTo(document.querySelector('#description'));
 const isDoneSwitch = mdc.switchControl.MDCSwitch.attachTo(document.querySelector('.mdc-switch'));
 const cbMoveToTOp = mdc.checkbox.MDCCheckbox.attachTo(document.querySelector('.mdc-checkbox'));
-const alert = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
+const mdcAlert = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 const isDone = document.getElementById("isDone");
 /**  @param e {MouseEvent} */
 function isDoneChange(e){
@@ -28,6 +28,11 @@ function btnSaveClicked(btnSave) {
     btnSave.disabled = true;
     /** @type {HTMLFormElement} */
     let frmTodo = document.getElementById("frmTodo");
+    let formData = new FormData(frmTodo);
+    let todoId = formData.get("TodoId");
+    if (todoId == "64") {
+        window.alert("👈👈👈👈👈👈squish!!!!");
+    }
     frmTodo.submit();
 }
 
@@ -40,6 +45,6 @@ function cancel(){
 window.addEventListener("load",function(){
     let alertType = document.getElementById("alertType").innerHTML;
     if(alertType == "1"){
-        alert.open();
+        mdcAlert.open();
     }
 });

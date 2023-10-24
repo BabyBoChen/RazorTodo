@@ -77,8 +77,8 @@ class BBLJCalendar {
             d.date.setDate(firstDateOfTheCalendar.getDate() + i);
             //ignore the 6th week if the month does not have 6 weeks
             if (d.date.getDay() == 0) {
-                let nextMonth = (new Date(this.config.year, this.config.month + 1, 1)).getMonth();
-                if (d.date.getMonth() + 1 == nextMonth) {
+                let nextMonth = (new Date(this.config.year, this.config.month, 1)).getMonth();
+                if (d.date.getMonth() == nextMonth) {
                     break;
                 }
             }
