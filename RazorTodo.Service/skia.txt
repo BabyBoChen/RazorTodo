@@ -1,0 +1,40 @@
+using (var img = SKImage.FromEncodedData("pexels-pixabay-33109.jpg"))
+            {
+                double aspect = img.Width / (img.Height * 1.0);
+                Size s = new Size(img.Width, img.Height);
+                if (aspect >= 1)
+                {
+                    if (img.Width > 800)
+                    {
+                        int w = 800;
+                        int h = (int)Math.Floor(800 / aspect);
+                        s = new Size(w, h);
+                    }
+                }
+                else
+                {
+                    if (img.Height > 800)
+                    {
+                        int w = (int)Math.Floor(800 * aspect);
+                        int h = 800;
+                        s = new Size(w, h);
+                    }
+                }
+                for (int i = 0; i < 100; i++)
+                {
+                    using (var surface = SKSurface.Create(new SKImageInfo(s.Width, s.Height)))
+                    {
+                        surface.Canvas.DrawImage(img, new SKRect(0, 0, img.Width, img.Height), new SKRect(0, 0, s.Width, s.Height));
+                        using (var resized = surface.Snapshot())
+                        {
+                            using (var data = resized.Encode(SKEncodedImageFormat.Webp, 90))
+                            {
+                                using (var fs = new FileStream("resized.webp", FileMode.Create, FileAccess.Write))
+                                {
+                                    data.SaveTo(fs);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
