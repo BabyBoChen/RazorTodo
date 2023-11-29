@@ -15,15 +15,17 @@ namespace RazorTodo.Web.Pages
     {
         private IRazorTodoService service;
         private ICloudDriveService drive;
+        private IImageService imgService;
         public string Id { get; set; }
         public Todo Todo { get; set; }
         public int PageNumber { get; private set; } = 1;
         public int TotalPage { get; private set; }
         public List<CloudDriveFile> Photos { get; set; } = new List<CloudDriveFile>();
 
-        public AlbumModel(IRazorTodoService service, ICloudDriveService drive)
+        public AlbumModel(IRazorTodoService service, IImageService imgService, ICloudDriveService drive)
         {
             this.service = service;
+            this.imgService = imgService;
             this.drive = drive;
         }
 
@@ -117,19 +119,29 @@ namespace RazorTodo.Web.Pages
                 var photos = Request.Form.Files;
                 for (int i = 0; i < photos.Count; i++)
                 {
+                    FileInfo fi = null;
                     using (var s = photos[i].OpenReadStream())
                     {
-                        this.drive.UploadFile(photos[i].FileName, s, $"{this.Todo.TodoId}");
+                        fi = this.imgService.ResizeImage(s, photos[i].FileName, 800);
                     }
+                    using (var fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read))
+                    {
+                        this.drive.UploadFile(fi.Name, fs, $"{this.Todo.TodoId}");
+                    }
+                    try
+                    {
+                        fi.Directory?.Delete(true);
+                    }
+                    catch (Exception) { }
                 }
             }
-            if(err != null)
+            if(err == null)
             {
-                return err;
+                return Redirect($"/Album?id={this.Todo.TodoId}&p={Request.Form["PageNumber"]}");
             }
             else
             {
-                return Redirect($"/Album?id={this.Todo.TodoId}&p={Request.Form["PageNumber"]}");
+                return err;
             }
         }
     }

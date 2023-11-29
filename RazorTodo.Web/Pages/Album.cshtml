@@ -46,7 +46,7 @@
     <form id="frmUpload" method="post" enctype="multipart/form-data" style="display:none;">
         <input type="hidden" id="todoId" name="TodoId" value="@Model.Todo.TodoId" />
         <input type="hidden" id="pageNumber" name="PageNumber" value="@Model.PageNumber" />
-        <input id="fileDialog" name="photos" type="file" multiple style="display:none;" onchange="upload(this.files)" />
+        <input id="fileDialog" name="photos" type="file" style="display:none;" onchange="upload(this.files)" />
     </form>
 </div>
 

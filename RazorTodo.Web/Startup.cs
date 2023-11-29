@@ -14,6 +14,7 @@ using RazorTodo.Service;
 using RazorTodo.Abstraction.Services;
 using System.Reflection;
 using System.IO;
+using RazorTodo.Web.Middlewares;
 
 namespace RazorTodo.Web
 {
@@ -42,19 +43,13 @@ namespace RazorTodo.Web
             string tokenPath = Path.Combine(cwd, "Secrets", "RazorTodoDropboxRefreshToken.json");
             DropboxService.Register(tokenPath, "RazorTodo");
             services.AddScoped<ICloudDriveService, DropboxService>();
+            services.AddTransient<IImageService, ImageService>();
             services.AddRazorPages().AddRazorRuntimeCompilation().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.LoginPath = "/SignIn";
             });
-            //services.AddCors(cors => 
-            //{
-            //    cors.AddPolicy("Calendar", policy => 
-            //    {
-            //        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-            //    });
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,8 +74,8 @@ namespace RazorTodo.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.Use(Middleware.RequestLengthFilter);
             app.UseSession();
-            //app.UseCors("Calendar");
 
             app.UseEndpoints(endpoints =>
             {
